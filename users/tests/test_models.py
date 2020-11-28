@@ -1,6 +1,7 @@
 """
 Contains tests for models defined in users app
 """
+import uuid
 from django.test import TestCase
 from users.models import User
 
@@ -16,3 +17,17 @@ class UserModelTestCase(TestCase):
         """
         User.objects.create_user(username="test", password="test@123")
         self.assertEqual(User.objects.count(), 1)
+
+    def test_string_representation(self):
+        """
+        Tests tha string representation of User model
+        """
+        user = User.objects.create_user(username="test", password="test@123")
+        self.assertEqual(str(user), user.username)
+
+    def test_uuid_is_saved_as_id(self):
+        """
+        Tests that the primary key used for User model is of UUID class
+        """
+        user = User.objects.create_user(username="test", password="test@123")
+        self.assertIsInstance(user.pk, uuid.UUID)
