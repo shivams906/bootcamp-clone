@@ -1,3 +1,10 @@
-from django.db import models
+"""
+Contains the User model class
+"""
+from django.contrib.auth.models import AbstractUser
 
-# Create your models here.
+
+class User(AbstractUser):
+    """
+    A class defining the user model
+    """
