@@ -13,6 +13,10 @@ class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = User
 
+    name = factory.Faker("name")
+    email = factory.Faker("email")
+    password = factory.Faker("password")
+
     @classmethod
     def _create(cls, model_class, *args, **kwargs):
         manager = cls._get_manager(model_class)

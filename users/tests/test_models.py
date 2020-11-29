@@ -2,7 +2,9 @@
 Contains tests for models defined in users app
 """
 import uuid
+from django.db import IntegrityError
 from django.test import TestCase
+import factory
 from users.factories import UserFactory
 from users.models import User
 
@@ -16,15 +18,27 @@ class UserModelTestCase(TestCase):
         """
         Tests whether valid data creates a user or not
         """
-        User.objects.create_user(username="test", password="test@123")
+        User.objects.create_user(
+            name="test", email="test@test.test", password="test123"
+        )
         self.assertEqual(User.objects.count(), 1)
+
+    def test_valid_data_creates_superuser(self):
+        """
+        Tests whether valid data creates a superuser or not.
+        """
+        user = User.objects.create_superuser(
+            name="test", email="test@test.test", password="test123"
+        )
+        self.assertEqual(User.objects.count(), 1)
+        self.assertTrue(user.is_superuser)
 
     def test_string_representation(self):
         """
         Tests tha string representation of User model
         """
-        user = UserFactory.build(username="test")
-        self.assertEqual(str(user), user.username)
+        user = UserFactory.build(name=factory.Faker("name"))
+        self.assertEqual(str(user), user.name)
 
     def test_uuid_is_saved_as_id(self):
         """
@@ -32,3 +46,11 @@ class UserModelTestCase(TestCase):
         """
         user = UserFactory.build()
         self.assertIsInstance(user.pk, uuid.UUID)
+
+    def test_no_two_users_have_same_email(self):
+        """
+        Tests that no two users can have the same email address.
+        """
+        UserFactory(email="test@test.test")
+        with self.assertRaises(IntegrityError):
+            UserFactory(email="test@test.test")
