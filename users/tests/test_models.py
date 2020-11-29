@@ -37,7 +37,7 @@ class UserModelTestCase(TestCase):
         """
         Tests tha string representation of User model
         """
-        user = UserFactory.build(name=factory.Faker("name"))
+        user = UserFactory.build()
         self.assertEqual(str(user), user.name)
 
     def test_uuid_is_saved_as_id(self):
