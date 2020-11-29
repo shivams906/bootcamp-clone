@@ -23,12 +23,12 @@ class UserModelTestCase(TestCase):
         """
         Tests tha string representation of User model
         """
-        user = UserFactory(username="test")
+        user = UserFactory.build(username="test")
         self.assertEqual(str(user), user.username)
 
     def test_uuid_is_saved_as_id(self):
         """
         Tests that the primary key used for User model is of UUID class
         """
-        user = UserFactory()
+        user = UserFactory.build()
         self.assertIsInstance(user.pk, uuid.UUID)
