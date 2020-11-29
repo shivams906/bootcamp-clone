@@ -54,3 +54,19 @@ class UserModelTestCase(TestCase):
         UserFactory(email="test@test.test")
         with self.assertRaises(IntegrityError):
             UserFactory(email="test@test.test")
+
+    def test_name_is_required(self):
+        """
+        Tests that name is required.
+        """
+        with self.assertRaises(ValueError):
+            User.objects.create_user(
+                name=None, email="test@test.test", password="test@123"
+            )
+
+    def test_email_is_required(self):
+        """
+        Tests that email is required.
+        """
+        with self.assertRaises(ValueError):
+            User.objects.create_user(name="test", email=None, password="test@123")
