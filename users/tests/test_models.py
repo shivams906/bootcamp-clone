@@ -5,8 +5,11 @@ import uuid
 from django.db import IntegrityError
 from django.test import TestCase
 import factory
+from faker import Faker
 from users.factories import UserFactory
 from users.models import User
+
+fake = Faker()
 
 
 class UserModelTestCase(TestCase):
@@ -19,7 +22,7 @@ class UserModelTestCase(TestCase):
         Tests whether valid data creates a user or not
         """
         User.objects.create_user(
-            name="test", email="test@test.test", password="test123"
+            name=fake.name(), email=fake.email(), password=fake.password()
         )
         self.assertEqual(User.objects.count(), 1)
 
@@ -28,7 +31,7 @@ class UserModelTestCase(TestCase):
         Tests whether valid data creates a superuser or not.
         """
         user = User.objects.create_superuser(
-            name="test", email="test@test.test", password="test123"
+            name=fake.name(), email=fake.email(), password=fake.password()
         )
         self.assertEqual(User.objects.count(), 1)
         self.assertTrue(user.is_superuser)
@@ -60,16 +63,14 @@ class UserModelTestCase(TestCase):
         Tests that name is required.
         """
         with self.assertRaises(ValueError):
-            User.objects.create_user(
-                name=None, email="test@test.test", password="test@123"
-            )
+            UserFactory(name=None)
 
     def test_email_is_required(self):
         """
         Tests that email is required.
         """
         with self.assertRaises(ValueError):
-            User.objects.create_user(name="test", email=None, password="test@123")
+            UserFactory(email=None)
 
     def test_create_superuser_raises_error_when_is_superuser_is_false(self):
         """
