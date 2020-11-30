@@ -2,9 +2,9 @@
 Contains tests for models defined in users app
 """
 import uuid
+from unittest import mock
 from django.db import IntegrityError
 from django.test import TestCase
-import factory
 from faker import Faker
 from users.factories import UserFactory
 from users.models import User
@@ -89,3 +89,29 @@ class UserModelTestCase(TestCase):
             User.objects.create_superuser(
                 name="test", email="test@123", password="test@123", is_staff=False
             )
+
+    def test_get_full_name_returns_name(self):
+        """
+        Tests that get_full_name returns name.
+        """
+        user = UserFactory.build()
+        self.assertEqual(user.get_full_name(), user.name)
+
+    def test_get_short_name_returns_name(self):
+        """
+        Tests that get_short_name returns name.
+        """
+        user = UserFactory.build()
+        self.assertEqual(user.get_short_name(), user.name)
+
+    @mock.patch("users.models.send_mail")
+    def test_email_user_works_correctly(self, mock_send_mail):
+        """
+        Tests that email_user correctly calls send_mail function.
+        """
+        user = UserFactory.build()
+        subject = "test"
+        message = "test"
+        from_email = "test@test.test"
+        user.email_user(subject, message, from_email)
+        mock_send_mail.assert_called_with(subject, message, from_email, [user.email])
