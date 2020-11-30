@@ -80,3 +80,12 @@ class UserModelTestCase(TestCase):
             User.objects.create_superuser(
                 name="test", email="test@123", password="test@123", is_superuser=False
             )
+
+    def test_create_superuser_raises_error_when_is_staff_is_false(self):
+        """
+        Tests that create_superuser raises error if is_staff is false.
+        """
+        with self.assertRaises(ValueError):
+            User.objects.create_superuser(
+                name="test", email="test@123", password="test@123", is_staff=False
+            )
