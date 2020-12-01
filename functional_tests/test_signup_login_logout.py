@@ -51,17 +51,12 @@ class SignupLoginLogoutTestCase(StaticLiveServerTestCase):
         submit_button = wait_for(lambda: self.browser.find_element_by_name("submit"))
         submit_button.click()
 
-        # She is taken to her profile page
-        user = User.objects.first()
+        # She is taken to the login page
         wait_for(
             lambda: self.assertEqual(
-                self.browser.current_url, self.live_server_url + user.get_absolute_url()
+                self.browser.current_url, self.live_server_url + reverse("users:login")
             )
         )
-        main_content = wait_for(
-            lambda: self.browser.find_element_by_tag_name("main")
-        ).text
-        self.assertIn(user.name, main_content)
 
     def test_login_logout(self):
         """

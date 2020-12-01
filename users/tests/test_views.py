@@ -2,6 +2,7 @@
 Contains tests for views defined in users app.
 """
 from django.test import RequestFactory, TestCase
+from django.urls import reverse
 from faker import Faker
 from users.factories import UserFactory
 from users.forms import UserCreationForm
@@ -42,9 +43,9 @@ class SignUpTestCase(TestCase):
         SignUp.as_view()(request)
         self.assertEqual(User.objects.count(), 1)
 
-    def test_valid_POST_redirects_to_user_detail(self):
+    def test_valid_POST_redirects_to_login_page(self):
         """
-        Tests that POSTing valid data redirects to the newly created user's detail page.
+        Tests that POSTing valid data redirects to the login page.
         """
         request = RequestFactory().post(
             "",
@@ -55,9 +56,8 @@ class SignUpTestCase(TestCase):
             },
         )
         response = SignUp.as_view()(request)
-        user = User.objects.first()
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, user.get_absolute_url())
+        self.assertEqual(response.url, reverse("users:login"))
 
     def test_invalid_POST_returns_bound_form_with_errors(self):
         """

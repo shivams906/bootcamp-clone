@@ -43,6 +43,13 @@ class UserModelTestCase(TestCase):
         user = UserFactory.build()
         self.assertEqual(str(user), user.name)
 
+    def test_get_absolute_url(self):
+        """
+        Tests that get_absolute_url returns the expected url.
+        """
+        user = UserFactory()
+        self.assertEqual(user.get_absolute_url(), f"/users/{user.pk}/")
+
     def test_uuid_is_saved_as_id(self):
         """
         Tests that the primary key used for User model is of UUID class
