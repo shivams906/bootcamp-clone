@@ -6,3 +6,4 @@ omit =
     *asgi.py,
     manage.py,
     *settings*,
+    *test*,

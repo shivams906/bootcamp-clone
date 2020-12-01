@@ -10,6 +10,7 @@ from django.contrib.auth.models import (
 )
 from django.core.mail import send_mail
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import gettext_lazy as _
 
@@ -128,6 +129,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        """
+        Returns the url of the object.
+        """
+        return reverse("users:profile", args=[self.id])
 
     def clean(self):
         super().clean()

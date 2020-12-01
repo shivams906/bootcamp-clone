@@ -5,6 +5,7 @@ from django import forms
 from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UserChangeForm as BaseUserChangeForm
 from django.core.exceptions import ValidationError
+from django.utils.text import gettext_lazy as _
 from .models import User
 
 
@@ -12,6 +13,13 @@ class UserCreationForm(forms.ModelForm):
     """
     Form class for creating a user.
     """
+
+    password = forms.CharField(
+        label=_("Password"),
+        strip=False,
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+        help_text=password_validation.password_validators_help_text_html(),
+    )
 
     class Meta:
         model = User
