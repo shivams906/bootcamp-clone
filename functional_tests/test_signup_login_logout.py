@@ -1,28 +1,15 @@
 """
 Functional tests for signup, login and logout (and other account functions).
 """
-import time
-from faker import Faker
-from selenium import webdriver
-from selenium.common.exceptions import WebDriverException
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.urls import reverse
 from users.models import User
-
-fake = Faker()
-MAX_WAIT = 5
+from .base import fake, FunctionalTest, wait_for
 
 
-class SignupLoginLogoutTestCase(StaticLiveServerTestCase):
+class SignupLoginLogoutTestCase(FunctionalTest):
     """
     Tests for account related functions like signup, login and logout.
     """
-
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-
-    def tearDown(self):
-        self.browser.quit()
 
     def test_signup(self):
         """
@@ -116,17 +103,3 @@ class SignupLoginLogoutTestCase(StaticLiveServerTestCase):
         self.assertIn("Signup", header_content)
         self.assertNotIn(user.name, header_content)
         self.assertNotIn("Logout", header_content)
-
-
-def wait_for(function):
-    """
-    Helper method for the tests. Provides an explicit wait.
-    """
-    start_time = time.time()
-    while True:
-        try:
-            return function()
-        except WebDriverException as exception:
-            if time.time() - start_time > MAX_WAIT:
-                raise exception
-            time.sleep(0.5)
