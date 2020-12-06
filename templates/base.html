@@ -1,24 +1,31 @@
+{% load static %}
 <html>
-    <head>
-        <title>
-            {% block title %}Bootcamp{% endblock %}
-        </title>
-    </head>
-    <body>
-        {% block header %}
-        <header>
-            {% if request.user.is_authenticated %}
-            {{ request.user.name }}
-            <a href="{% url 'users:logout' %}">Logout</a>
-            {% else %}
-            <a href="{% url 'users:login' %}">Login</a>
-            <a href="{% url 'users:signup' %}">Signup</a>
-            {% endif %}
-        </header>
-        {% endblock %}
-        <main>
-        {% block main %}
-        {% endblock %}
-        </main>
-    </body>
+  <head>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'styles/base.css' %}"
+    />
+    <title>{% block title %}Bootcamp{% endblock %}</title>
+  </head>
+  <body>
+    {% block header %}
+    <header>
+      <div class="left">
+        <a href="{% url 'home' %}">
+          <span class="home">BootCamp</span>
+        </a>
+      </div>
+      <div class="right">
+        {% if request.user.is_authenticated %} {{ request.user.name }}
+        <a href="{% url 'users:logout' %}">Logout</a>
+        {% else %}
+        <a href="{% url 'users:login' %}">Login</a>
+        <a href="{% url 'users:signup' %}">Signup</a>
+        {% endif %}
+      </div>
+    </header>
+    {% endblock %}
+    <main>{% block main %} {% endblock %}</main>
+  </body>
 </html>

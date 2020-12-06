@@ -5,3 +5,5 @@ db.sqlite3
 .coverage
 htmlcov
 geckodriver.log
+node_modules
+package-lock.json

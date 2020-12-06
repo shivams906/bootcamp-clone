@@ -1,0 +1,13 @@
+* {
+  box-sizing: border-box;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+}
+
+header > div.left .home {
+  font-size: larger;
+  font-weight: bolder;
+}
