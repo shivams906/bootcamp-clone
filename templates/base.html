@@ -15,6 +15,7 @@
         <a href="{% url 'home' %}">
           <span class="home">BootCamp</span>
         </a>
+        <a href="{% url 'feeds:home' %}">Feeds</a>
       </div>
       <div class="right">
         {% if request.user.is_authenticated %} {{ request.user.name }}

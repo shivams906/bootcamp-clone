@@ -75,9 +75,7 @@ class SignupLoginLogoutTestCase(FunctionalTest):
 
         # She is now logged in
         wait_for(
-            lambda: self.assertEqual(
-                self.browser.current_url, self.live_server_url + "/"
-            )
+            lambda: self.assertNotIn(reverse("users:login"), self.browser.current_url)
         )
         header_content = wait_for(
             lambda: self.browser.find_element_by_tag_name("header")
@@ -91,11 +89,6 @@ class SignupLoginLogoutTestCase(FunctionalTest):
         self.browser.find_element_by_link_text("Logout").click()
 
         # She is now logged out
-        wait_for(
-            lambda: self.assertEqual(
-                self.browser.current_url, self.live_server_url + "/"
-            )
-        )
         header_content = wait_for(
             lambda: self.browser.find_element_by_tag_name("header")
         ).text

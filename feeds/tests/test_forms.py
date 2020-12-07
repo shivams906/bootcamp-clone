@@ -20,8 +20,20 @@ class FeedModelFormTestCase(TestCase):
         Tests whether valid data creates a feed.
         """
         user = UserFactory()
-        form = FeedModelForm({"text": fake.text(), "author": user.pk})
+        form = FeedModelForm({"text": fake.text()})
         self.assertTrue(form.is_valid())
-        feed = form.save()
+        feed = form.save(author=user)
         self.assertEqual(Feed.objects.count(), 1)
         self.assertEqual(Feed.objects.first(), feed)
+
+    def test_save_correctly_saves_author(self):
+        """
+        Tests that save method saves author correctly.
+        """
+        user = UserFactory()
+        form = FeedModelForm({"text": fake.text()})
+        self.assertTrue(form.is_valid())
+        feed = form.save(author=user)
+        self.assertEqual(Feed.objects.count(), 1)
+        feed = Feed.objects.first()
+        self.assertEqual(feed.author, user)

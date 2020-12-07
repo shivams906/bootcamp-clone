@@ -6,6 +6,7 @@ from faker import Faker
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from users.factories import UserFactory
 
 fake = Faker()
 MAX_WAIT = 5
@@ -21,6 +22,24 @@ class FunctionalTest(StaticLiveServerTestCase):
 
     def tearDown(self):
         self.browser.quit()
+
+    def login(self, name):
+        """
+        logs in a user.
+        """
+        password = fake.password()
+        user = UserFactory(name=name, password=password)
+        self.browser.get(self.live_server_url)
+        wait_for(lambda: self.browser.find_element_by_link_text("Login")).click()
+        wait_for(lambda: self.browser.find_element_by_name("username")).send_keys(
+            user.email
+        )
+        wait_for(lambda: self.browser.find_element_by_name("password")).send_keys(
+            password
+        )
+        wait_for(
+            lambda: self.browser.find_element_by_css_selector("input[type='submit']")
+        ).click()
 
 
 def wait_for(function):

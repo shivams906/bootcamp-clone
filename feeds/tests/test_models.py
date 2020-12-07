@@ -34,3 +34,13 @@ class FeedTestCase(TestCase):
         """
         feed = FeedFactry.build()
         self.assertEqual(str(feed), feed.text[:20])
+
+    def test_feeds_are_ordered_from_new_to_old(self):
+        """
+        Tests that feeds are ordered from new to old.
+        """
+        feed1 = FeedFactry()
+        feed2 = FeedFactry()
+        feeds = Feed.objects.all()
+        self.assertEqual(feed1, feeds[1])
+        self.assertEqual(feed2, feeds[0])

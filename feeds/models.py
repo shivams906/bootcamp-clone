@@ -22,5 +22,8 @@ class Feed(models.Model):
         "self", on_delete=models.CASCADE, blank=True, null=True, related_name="children"
     )
 
+    class Meta:
+        ordering = ["-created_at"]
+
     def __str__(self):
         return self.text[:20]

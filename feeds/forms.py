@@ -12,4 +12,10 @@ class FeedModelForm(forms.ModelForm):
 
     class Meta:
         model = Feed
-        fields = "__all__"
+        fields = ("text",)
+
+    def save(self, author=None, commit=True):
+        feed = Feed(text=self.cleaned_data["text"], author=author)
+        if commit:
+            feed.save()
+        return feed
