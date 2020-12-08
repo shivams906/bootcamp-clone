@@ -49,5 +49,5 @@ class FeedTestCase(FunctionalTest):
 
         # but above the previous one.
         feed_items = feed_list.find_elements_by_class_name("feed_item")
-        self.assertEqual("hello again", feed_items[0].text)
-        self.assertEqual("hello", feed_items[1].text)
+        self.assertIn("hello again", feed_items[0].text)
+        self.assertIn("hello", feed_items[1].text)
