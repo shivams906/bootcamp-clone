@@ -6,7 +6,7 @@ from users.factories import UserFactory
 from .models import Feed
 
 
-class FeedFactry(factory.django.DjangoModelFactory):
+class FeedFactory(factory.django.DjangoModelFactory):
     """
     Factory for Feed model.
     """

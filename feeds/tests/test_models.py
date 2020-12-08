@@ -3,7 +3,7 @@ Tests for models defined in feeds app.
 """
 import uuid
 from django.test import TestCase
-from feeds.factories import FeedFactry
+from feeds.factories import FeedFactory
 from feeds.models import Feed
 from users.factories import UserFactory
 
@@ -25,22 +25,22 @@ class FeedTestCase(TestCase):
         """
         Tests that id is an instance of uuid.
         """
-        feed = FeedFactry.build()
+        feed = FeedFactory.build()
         self.assertIsInstance(feed.id, uuid.UUID)
 
     def test_string_representation(self):
         """
         Tests the string representation of Feed object.
         """
-        feed = FeedFactry.build()
+        feed = FeedFactory.build()
         self.assertEqual(str(feed), feed.text[:20])
 
     def test_feeds_are_ordered_from_new_to_old(self):
         """
         Tests that feeds are ordered from new to old.
         """
-        feed1 = FeedFactry()
-        feed2 = FeedFactry()
+        feed1 = FeedFactory()
+        feed2 = FeedFactory()
         feeds = Feed.objects.all()
         self.assertEqual(feed1, feeds[1])
         self.assertEqual(feed2, feeds[0])

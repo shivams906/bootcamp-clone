@@ -6,7 +6,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.test import RequestFactory, TestCase
 from django.urls import reverse
 from faker import Faker
-from feeds.factories import FeedFactry
+from feeds.factories import FeedFactory
 from feeds.forms import FeedModelForm
 from feeds.models import Feed
 from feeds.views import FeedCreate, FeedList
@@ -24,8 +24,8 @@ class FeedListTestCase(TestCase):
         """
         Tests that GET returns list of feeds.
         """
-        feed1 = FeedFactry()
-        feed2 = FeedFactry()
+        feed1 = FeedFactory()
+        feed2 = FeedFactory()
         request = RequestFactory().get("")
         response = FeedList.as_view()(request)
         self.assertIn("feed_list", response.context_data)
