@@ -5,6 +5,11 @@
 header {
   display: flex;
   justify-content: space-between;
+  height: 50px;
+}
+
+header a {
+  text-decoration: none;
 }
 
 header > div.left .home {

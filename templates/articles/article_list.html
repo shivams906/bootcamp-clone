@@ -9,7 +9,9 @@
       {% for article in article_list %}
         <li>
           <a href="{% url 'articles:detail' article.pk %}">{{ article.title }}</a>
+          <br>
           - by <a href="{% url 'users:profile' article.author.pk %}">{{ article.author }}</a>
+           on {{ article.created_at }}
         </li>
       {% endfor %}
     </ul>

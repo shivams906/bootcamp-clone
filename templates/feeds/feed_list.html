@@ -5,7 +5,10 @@
 {% endif %} {% if feed_list %}
 <ul class="feed_list">
   {% for feed in feed_list %}
-  <li class="feed_item">{{ feed.text }}</li>
+  <li class="feed_item">
+    <a href="{% url 'users:profile' feed.author.pk %}">{{ feed.author }}</a> says:
+    <br>
+    {{ feed.text }}</li>
   {% endfor %}
 </ul>
 {% endif %} {% endblock %}
