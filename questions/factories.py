@@ -2,7 +2,7 @@
 Factories for questions app.
 """
 import factory
-from questions.models import Question
+from questions.models import Answer, Question
 from users.factories import UserFactory
 
 
@@ -16,4 +16,17 @@ class QuestionFactory(factory.django.DjangoModelFactory):
 
     title = factory.Faker("text")
     description = factory.Faker("text")
+    author = factory.SubFactory(UserFactory)
+
+
+class AnswerFactory(factory.django.DjangoModelFactory):
+    """
+    Factory class for Answer model.
+    """
+
+    class Meta:
+        model = Answer
+
+    text = factory.Faker("text")
+    question = factory.SubFactory(QuestionFactory)
     author = factory.SubFactory(UserFactory)

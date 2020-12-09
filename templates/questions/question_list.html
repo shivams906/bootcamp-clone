@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<a href="{% url 'questions:create' %}">Ask a question</a>
+{% if question_list %}
+<ul>
+    {% for question in question_list %}
+    <li>{{ question }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}
