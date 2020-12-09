@@ -3,6 +3,8 @@
 {% block main %}
   {% if user.is_authenticated %}
     <a href="{% url 'articles:create' %}">Create a new article</a>
+  {% else %}
+    <a href="{% url 'users:login' %}">Login</a> to add an article
   {% endif %}
   {% if article_list %}
     <ul>

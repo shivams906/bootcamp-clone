@@ -1,11 +1,22 @@
 {% extends 'base.html' %}
 
 {% block main %}
+{% if user.is_authenticated %}
 <a href="{% url 'questions:create' %}">Ask a question</a>
+{% else %}
+<a href="{% url 'users:login' %}">Login</a> to ask a question
+{% endif %}
 {% if question_list %}
 <ul>
     {% for question in question_list %}
-    <li>{{ question }}</li>
+    <li>
+        <a href="{% url 'questions:detail' question.pk %}">{{ question }}</a>
+        - by 
+        <a href="{% url 'users:profile' question.author.pk %}">
+            {{ question.author }}
+        </a>
+        on {{ question.created_at }}
+    </li>
     {% endfor %}
 </ul>
 {% endif %}

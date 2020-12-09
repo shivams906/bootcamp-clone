@@ -1,8 +1,14 @@
-{% extends 'base.html' %} {% block main %} {% if user.is_authenticated %}
+{% extends 'base.html' %}
+
+{% block main %}
+{% if user.is_authenticated %}
 <form action="{% url 'feeds:create'%}" method="POST">
   {% csrf_token %} {{ form }} <input type="submit" name="submit" value="Post" />
 </form>
-{% endif %} {% if feed_list %}
+{% else %}
+<a href="{% url 'users:login' %}">Login</a> to post a feed
+{% endif %}
+{% if feed_list %}
 <ul class="feed_list">
   {% for feed in feed_list %}
   <li class="feed_item">

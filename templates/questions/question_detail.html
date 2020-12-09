@@ -3,6 +3,9 @@
 {% block main %}
 {% if question %}
 <h4>{{ question.title }}</h4>
+<strong>Author</strong> - <a href="{% url 'users:profile' question.author.pk %}">{{ question.author }}</a>
+<br>
+<strong>Created at</strong> - {{ question.created_at }}
 <p>{{ question.description }}</p>
 {% endif %}
 {% endblock %}
