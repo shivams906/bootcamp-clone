@@ -7,5 +7,16 @@
 <br>
 <strong>Created at</strong> - {{ question.created_at }}
 <p>{{ question.description }}</p>
+<a href="{% url 'questions:answer' question.pk %}">Answer it</a>
+{% if answers %}
+<ul>
+    {% for answer in answers %}
+    <li>
+        {{ answer.author }} wrote on {{ answer.created_at }}:
+        <p>{{ answer.text }}</p>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
 {% endif %}
 {% endblock %}

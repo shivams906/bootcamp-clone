@@ -4,10 +4,10 @@ Tests for views defined in questions app.
 from django.contrib.auth.models import AnonymousUser
 from django.test import RequestFactory, TestCase
 from django.urls import reverse
-from questions.factories import QuestionFactory
-from questions.forms import QuestionModelForm
-from questions.models import Question
-from questions.views import QuestionCreate, QuestionDetail, QuestionList
+from questions.factories import AnswerFactory, QuestionFactory
+from questions.forms import AnswerModelForm, QuestionModelForm
+from questions.models import Answer, Question
+from questions.views import AnswerCreate, QuestionCreate, QuestionDetail, QuestionList
 from users.factories import UserFactory
 
 
@@ -99,3 +99,68 @@ class QuestionDetailTestCase(TestCase):
         response = QuestionDetail.as_view()(request, pk=question.pk)
         self.assertIn("question", response.context_data)
         self.assertEqual(response.context_data["question"], question)
+
+    def test_returns_answers_to_the_question(self):
+        """
+        Tests that view returns answers to the question object.
+        """
+        answer = AnswerFactory()
+        request = RequestFactory().get("")
+        response = QuestionDetail.as_view()(request, pk=answer.question.pk)
+        self.assertIn("answers", response.context_data)
+        self.assertIn(answer, response.context_data["answers"])
+
+
+class AnswerCreateTestCase(TestCase):
+    """
+    Test class for AnswerCreate.
+    """
+
+    def test_GET_returns_blank_form(self):
+        """
+        Tests that GET returns blank form.
+        """
+        user = UserFactory()
+        request = RequestFactory().get("")
+        request.user = user
+        response = AnswerCreate.as_view()(request)
+        self.assertIn("form", response.context_data)
+        form = response.context_data["form"]
+        self.assertIsInstance(form, AnswerModelForm)
+
+    def test_valid_POST_creates_answer(self):
+        """
+        Tests that POSTing valid data creates answer.
+        """
+        user = UserFactory()
+        question = QuestionFactory()
+        request = RequestFactory().post("", {"text": "answer"})
+        request.user = user
+        AnswerCreate.as_view()(request, pk=question.pk)
+        self.assertEqual(Answer.objects.count(), 1)
+        self.assertEqual(question.answers.count(), 1)
+        self.assertEqual(Answer.objects.first(), question.answers.first())
+
+    def test_valid_POST_redirects_to_the_question_detail_page(self):
+        """
+        Tests that POSTing valid data redirects user
+        to the question's detail page.
+        """
+        user = UserFactory()
+        question = QuestionFactory()
+        request = RequestFactory().post("", {"text": "answer"})
+        request.user = user
+        response = AnswerCreate.as_view()(request, pk=question.pk)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, question.get_absolute_url())
+
+    def test_unauthenticated_users_are_redirected_to_login_page(self):
+        """
+        Tests that unauthenticated users are redirected to login page.
+        """
+        question = QuestionFactory()
+        request = RequestFactory().get("")
+        request.user = AnonymousUser()
+        response = AnswerCreate.as_view()(request, pk=question.pk)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(reverse("users:login"), response.url)

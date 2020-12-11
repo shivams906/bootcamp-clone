@@ -2,6 +2,7 @@
 Functional tests for questions.
 """
 from django.urls import reverse
+from questions.factories import QuestionFactory
 from questions.models import Question
 from .base import FunctionalTest, wait_for
 
@@ -60,3 +61,52 @@ class QuestionTest(FunctionalTest):
             lambda: self.browser.find_element_by_tag_name("main")
         ).text
         self.assertIn("title", main_content)
+
+    def test_user_can_answer_questions(self):
+        """
+        Tests that user can answer questions.
+        """
+        question = QuestionFactory(title="title")
+        # Edith logs in and goes to the questions' home page.
+        self.login("Edith")
+        self.browser.get(self.live_server_url + reverse("questions:home"))
+
+        # She sees a question and clicks on it.
+        question_link = wait_for(
+            lambda: self.browser.find_element_by_link_text(question.title)
+        )
+        question_link.click()
+
+        # She is taken to the question's page.
+        wait_for(
+            lambda: self.assertEqual(
+                self.browser.current_url,
+                self.live_server_url + reverse("questions:detail", args=[question.pk]),
+            )
+        )
+
+        # She clicks on the link to answer the question.
+        answer_link = wait_for(
+            lambda: self.browser.find_element_by_link_text("Answer it")
+        )
+        answer_link.click()
+
+        # She enters her answer and submits it.
+        wait_for(lambda: self.browser.find_element_by_name("answer_form"))
+        answer_box = wait_for(lambda: self.browser.find_element_by_name("text"))
+        submit_button = wait_for(lambda: self.browser.find_element_by_name("submit"))
+
+        answer_box.send_keys("answer")
+        submit_button.click()
+
+        # Her answer now appears below the question.
+        wait_for(
+            lambda: self.assertEqual(
+                self.browser.current_url,
+                self.live_server_url + reverse("questions:detail", args=[question.pk]),
+            )
+        )
+        main_content = wait_for(
+            lambda: self.browser.find_element_by_tag_name("main")
+        ).text
+        self.assertIn("answer", main_content)
