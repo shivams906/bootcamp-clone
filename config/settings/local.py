@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # local apps
     "articles.apps.ArticlesConfig",
     "feeds.apps.FeedsConfig",
+    "polls.apps.PollsConfig",
     "questions.apps.QuestionsConfig",
     "users.apps.UsersConfig",
 ]
