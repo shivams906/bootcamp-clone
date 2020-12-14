@@ -12,10 +12,12 @@ class QuestionModelForm(forms.ModelForm):
 
     class Meta:
         model = Question
-        fields = ("text",)
+        fields = ("question_text",)
 
     def save(self, author=None, commit=True):
-        question = Question(text=self.cleaned_data["text"], author=author)
+        question = Question(
+            question_text=self.cleaned_data["question_text"], author=author
+        )
         if commit:
             question.save()
         return question

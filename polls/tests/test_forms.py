@@ -17,7 +17,7 @@ class QuestionModelFormTestCase(TestCase):
         Tests that valid data creates question.
         """
         user = UserFactory()
-        form = QuestionModelForm({"text": "question"})
+        form = QuestionModelForm({"question_text": "question"})
         self.assertTrue(form.is_valid())
         form.save(author=user)
         self.assertEqual(Question.objects.count(), 1)

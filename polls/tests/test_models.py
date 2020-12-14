@@ -3,6 +3,7 @@ Tests for models defined in polls app.
 """
 import uuid
 from django.test import TestCase
+from django.urls import reverse
 from polls.factories import ChoiceFactory, QuestionFactory
 from polls.models import Choice, Question
 from users.factories import UserFactory
@@ -18,7 +19,7 @@ class QuestionModelTestCase(TestCase):
         Tests that valid data creates question.
         """
         user = UserFactory()
-        Question.objects.create(text="question", author=user)
+        Question.objects.create(question_text="question", author=user)
         self.assertEqual(Question.objects.count(), 1)
 
     def test_string_representation(self):
@@ -26,7 +27,7 @@ class QuestionModelTestCase(TestCase):
         Tests the string representation of question.
         """
         question = QuestionFactory()
-        self.assertEqual(str(question), question.text)
+        self.assertEqual(str(question), question.question_text)
 
     def test_id_is_saved_as_uuid(self):
         """
@@ -34,6 +35,15 @@ class QuestionModelTestCase(TestCase):
         """
         question = QuestionFactory()
         self.assertIsInstance(question.id, uuid.UUID)
+
+    def test_get_absolute_url(self):
+        """
+        Tests that get_absolute_url returns correct url.
+        """
+        question = QuestionFactory()
+        self.assertEqual(
+            question.get_absolute_url(), reverse("polls:detail", args=[question.pk])
+        )
 
 
 class ChoiceModelTestCase(TestCase):
@@ -46,7 +56,7 @@ class ChoiceModelTestCase(TestCase):
         Tests that valid data creates choice.
         """
         question = QuestionFactory()
-        Choice.objects.create(text="choice", question=question)
+        Choice.objects.create(choice_text="choice", question=question)
         self.assertEqual(Choice.objects.count(), 1)
 
     def test_string_representation(self):
@@ -54,7 +64,7 @@ class ChoiceModelTestCase(TestCase):
         Tests the string representation of choice.
         """
         choice = ChoiceFactory()
-        self.assertEqual(str(choice), choice.text)
+        self.assertEqual(str(choice), choice.choice_text)
 
     def test_id_is_saved_as_uuid(self):
         """

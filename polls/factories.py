@@ -14,7 +14,7 @@ class QuestionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Question
 
-    text = factory.Faker("text", max_nb_chars=255)
+    question_text = factory.Faker("text", max_nb_chars=255)
     author = factory.SubFactory(UserFactory)
 
 
@@ -26,5 +26,5 @@ class ChoiceFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Choice
 
-    text = factory.Faker("text", max_nb_chars=255)
+    choice_text = factory.Faker("text", max_nb_chars=255)
     question = factory.SubFactory(QuestionFactory)

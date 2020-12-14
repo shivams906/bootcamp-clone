@@ -18,6 +18,7 @@
         <a href="{% url 'feeds:home' %}">Feeds</a>
         <a href="{% url 'articles:home' %}">Articles</a>
         <a href="{% url 'questions:home' %}">Questions</a>
+        <a href="{% url 'polls:home' %}">Polls</a>
       </div>
       <div class="right">
         {% if request.user.is_authenticated %} {{ request.user.name }}

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block main %}
+{% if question %}
+<h4>{{ question }}</h4>
+{% if question.choices %}
+{% for choice in question.choices.all %}
+{{ choice }}
+{% endfor %}
+{% endif %}
+{% endif %}
+{% endblock %}
