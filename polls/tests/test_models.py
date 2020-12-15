@@ -45,6 +45,41 @@ class QuestionModelTestCase(TestCase):
             question.get_absolute_url(), reverse("polls:detail", args=[question.pk])
         )
 
+    def test_voting_saves_user(self):
+        """
+        Tests that voting saves the user who voted.
+        """
+        user = UserFactory()
+        question = QuestionFactory()
+        choice = ChoiceFactory(question=question)
+        question.vote(choice=choice, user=user)
+        self.assertIn(user, question.voters.all())
+        self.assertEqual(choice.votes, 1)
+
+    def test_a_choice_can_only_be_voted_on_once(self):
+        """
+        Tests that a user can vote on a choice only once.
+        """
+        user = UserFactory()
+        question = QuestionFactory()
+        choice = ChoiceFactory(question=question)
+        question.vote(choice=choice, user=user)
+        question.vote(choice=choice, user=user)
+        self.assertEqual(choice.votes, 1)
+
+    def test_user_can_vote_on_only_one_choice(self):
+        """
+        Tests that a user can vote on only one choice.
+        """
+        user = UserFactory()
+        question = QuestionFactory()
+        choice1 = ChoiceFactory(question=question)
+        choice2 = ChoiceFactory(question=question)
+        question.vote(choice=choice1, user=user)
+        question.vote(choice=choice2, user=user)
+        self.assertEqual(choice1.votes, 1)
+        self.assertEqual(choice2.votes, 0)
+
 
 class ChoiceModelTestCase(TestCase):
     """

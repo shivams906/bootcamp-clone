@@ -17,6 +17,7 @@ class Question(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="polls"
     )
+    voters = models.ManyToManyField(settings.AUTH_USER_MODEL)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
@@ -25,6 +26,16 @@ class Question(models.Model):
 
     def get_absolute_url(self):
         return reverse("polls:detail", args=[self.pk])
+
+    def vote(self, choice=None, user=None):
+        """
+        Increments the vote count by 1 and saves the user as a voter.
+        """
+        if user is not None and choice is not None and user not in self.voters.all():
+            choice.votes += 1
+            self.voters.add(user)
+            self.save()
+            choice.save()
 
 
 class Choice(models.Model):

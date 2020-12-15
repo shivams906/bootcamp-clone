@@ -72,6 +72,12 @@ def vote(request, pk):
     Votes on the poll.
     """
     question = get_object_or_404(Question, pk=pk)
+    if request.user in question.voters.all():
+        return render(
+            request,
+            "polls/poll_detail.html",
+            {"question": question, "error_message": "You have already voted."},
+        )
     try:
         selected_choice = question.choices.get(pk=request.POST["choice"])
     except (KeyError, Choice.DoesNotExist):
@@ -85,6 +91,5 @@ def vote(request, pk):
             },
         )
     else:
-        selected_choice.votes += 1
-        selected_choice.save()
+        question.vote(choice=selected_choice, user=request.user)
         return redirect(reverse("polls:detail", args=(question.pk,)))

@@ -121,8 +121,8 @@ class VoteTestCase(TestCase):
         question = QuestionFactory(question_text="question")
         request = RequestFactory().post("")
         request.user = user
-        resposne = vote(request, pk=question.pk)
-        self.assertIn("You did not select a choice.", resposne.content.decode("utf-8"))
+        response = vote(request, pk=question.pk)
+        self.assertIn("You did not select a choice.", response.content.decode("utf-8"))
 
     def test_unauthenticated_users_are_redirected_to_login_page(self):
         """
@@ -135,3 +135,17 @@ class VoteTestCase(TestCase):
         response = vote(request, pk=question.pk)
         self.assertEqual(response.status_code, 302)
         self.assertIn(reverse("users:login"), response.url)
+
+    def test_voting_again_returns_error(self):
+        """
+        Tests that voting again returns error.
+        """
+        user = UserFactory()
+        question = QuestionFactory()
+        choice1 = ChoiceFactory(question=question)
+        choice2 = ChoiceFactory(question=question)
+        question.vote(choice=choice1, user=user)
+        request = RequestFactory().post("", {"choice": choice2.pk})
+        request.user = user
+        response = vote(request, pk=question.pk)
+        self.assertIn("You have already voted.", response.content.decode("utf-8"))
