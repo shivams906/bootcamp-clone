@@ -4,9 +4,9 @@ Tests for views defined in polls app.
 from django.contrib.auth.models import AnonymousUser
 from django.test import RequestFactory, TestCase
 from django.urls import reverse
-from polls.factories import QuestionFactory
+from polls.factories import ChoiceFactory, QuestionFactory
 from polls.models import Question
-from polls.views import PollCreate, PollDetail, PollList
+from polls.views import PollCreate, PollDetail, PollList, vote
 from users.factories import UserFactory
 
 
@@ -93,3 +93,45 @@ class PollDetailTestCase(TestCase):
         request = RequestFactory().get("")
         response = PollDetail.as_view()(request, pk=question.pk)
         self.assertIn("question", response.context_data)
+
+
+class VoteTestCase(TestCase):
+    """
+    Test class for vote.
+    """
+
+    def test_POSTing_valid_data_votes(self):
+        """
+        Tests that POSTing valid data votes on poll.
+        """
+        user = UserFactory()
+        question = QuestionFactory(question_text="question")
+        choice1 = ChoiceFactory(question=question, choice_text="Choice 1")
+        request = RequestFactory().post("", {"choice": choice1.pk})
+        request.user = user
+        vote(request, pk=question.pk)
+        choice1.refresh_from_db()
+        self.assertEqual(choice1.votes, 1)
+
+    def test_POSTing_no_choice_returns_error(self):
+        """
+        Tests that POSTing without choosing returns error.
+        """
+        user = UserFactory()
+        question = QuestionFactory(question_text="question")
+        request = RequestFactory().post("")
+        request.user = user
+        resposne = vote(request, pk=question.pk)
+        self.assertIn("You did not select a choice.", resposne.content.decode("utf-8"))
+
+    def test_unauthenticated_users_are_redirected_to_login_page(self):
+        """
+        Tests that unauthenticated users are redirected to login page.
+        """
+        question = QuestionFactory(question_text="question")
+        choice1 = ChoiceFactory(question=question, choice_text="Choice 1")
+        request = RequestFactory().post("", {"choice": choice1.pk})
+        request.user = AnonymousUser()
+        response = vote(request, pk=question.pk)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(reverse("users:login"), response.url)

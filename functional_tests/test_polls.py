@@ -3,6 +3,7 @@ Functional tests for polls.
 """
 from django.urls import reverse
 from .base import FunctionalTest, wait_for
+from polls.factories import ChoiceFactory, QuestionFactory
 from polls.models import Question
 
 
@@ -76,3 +77,37 @@ class PollTest(FunctionalTest):
             lambda: self.browser.find_element_by_tag_name("main")
         ).text
         self.assertIn("question", main_content)
+
+    def test_can_vote_on_poll(self):
+        """
+        Tests that user can vote on the poll.
+        """
+        question = QuestionFactory(question_text="question")
+        choice1 = ChoiceFactory(question=question, choice_text="Choice 1")
+        choice2 = ChoiceFactory(question=question)
+        choice3 = ChoiceFactory(question=question)
+        choice4 = ChoiceFactory(question=question)
+
+        # Edith logs in and goes to the polls' homepage.
+        self.login("Edith")
+        self.browser.get(self.live_server_url + reverse("polls:home"))
+
+        # She clicks on a poll to go to its detail page.
+        poll_link = wait_for(lambda: self.browser.find_element_by_link_text("question"))
+        poll_link.click()
+
+        # She selects one of the choices and votes.
+        choices = wait_for(lambda: self.browser.find_elements_by_name("choice"))
+        submit_button = wait_for(lambda: self.browser.find_element_by_name("submit"))
+        choice1_id = choices[0].get_attribute("id")
+
+        choices[0].click()
+        submit_button.click()
+
+        # The page reloads and her choice has 1 vote.
+        choice1_label = wait_for(
+            lambda: self.browser.find_element_by_css_selector(
+                f"label[for='{choice1_id}']"
+            )
+        )
+        self.assertEqual(choice1_label.text, "Choice 1 - 1")

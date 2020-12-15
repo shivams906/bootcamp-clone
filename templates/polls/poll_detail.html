@@ -3,10 +3,19 @@
 {% block main %}
 {% if question %}
 <h4>{{ question }}</h4>
+{% if error_message %}
+<p><strong>{{ error_message }}</strong></p>
+{% endif %}
 {% if question.choices %}
+<form method="POST" action="{% url 'polls:vote' question.pk %}">
+    {% csrf_token %}
 {% for choice in question.choices.all %}
-{{ choice }}
+<input type="radio" name="choice" id="choice{{forloop.counter}}" value={{choice.pk}}>
+<label for="choice{{ forloop.counter }}">{{ choice }} - {{ choice.votes }}</label>
+<br>
 {% endfor %}
+<input type="submit" name="submit" value="Vote">
+</form>
 {% endif %}
 {% endif %}
 {% endblock %}

@@ -1,9 +1,11 @@
 """
 Views for polls app.
 """
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import inlineformset_factory
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.views import generic
 from polls.forms import QuestionModelForm
 from polls.models import Choice, Question
@@ -62,3 +64,27 @@ class PollDetail(generic.DetailView):
 
     queryset = Question.objects.all()
     template_name = "polls/poll_detail.html"
+
+
+@login_required
+def vote(request, pk):
+    """
+    Votes on the poll.
+    """
+    question = get_object_or_404(Question, pk=pk)
+    try:
+        selected_choice = question.choices.get(pk=request.POST["choice"])
+    except (KeyError, Choice.DoesNotExist):
+        # Redisplay the question voting form.
+        return render(
+            request,
+            "polls/poll_detail.html",
+            {
+                "question": question,
+                "error_message": "You did not select a choice.",
+            },
+        )
+    else:
+        selected_choice.votes += 1
+        selected_choice.save()
+        return redirect(reverse("polls:detail", args=(question.pk,)))

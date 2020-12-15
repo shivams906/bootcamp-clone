@@ -37,6 +37,7 @@ class Choice(models.Model):
     question = models.ForeignKey(
         Question, on_delete=models.CASCADE, related_name="choices"
     )
+    votes = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
