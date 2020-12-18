@@ -105,9 +105,10 @@ class PollTest(FunctionalTest):
         submit_button.click()
 
         # The page reloads and her choice has 1 vote.
-        choice1_label = wait_for(
-            lambda: self.browser.find_element_by_css_selector(
+        choice1_labels = wait_for(
+            lambda: self.browser.find_elements_by_css_selector(
                 f"label[for='{choice1_id}']"
             )
         )
-        self.assertEqual(choice1_label.text, "Choice 1 - 1")
+        self.assertEqual("Choice 1", choice1_labels[0].text)
+        self.assertEqual("1", choice1_labels[1].text)
