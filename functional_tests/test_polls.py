@@ -36,18 +36,10 @@ class PollTest(FunctionalTest):
         choice_2_box = wait_for(
             lambda: self.browser.find_element_by_name("choices-1-choice_text")
         )
-        choice_3_box = wait_for(
-            lambda: self.browser.find_element_by_name("choices-2-choice_text")
-        )
-        choice_4_box = wait_for(
-            lambda: self.browser.find_element_by_name("choices-3-choice_text")
-        )
 
         question_box.send_keys("question")
         choice_1_box.send_keys("choice 1")
         choice_2_box.send_keys("choice 2")
-        choice_3_box.send_keys("choice 3")
-        choice_4_box.send_keys("choice 4")
 
         # She submits it.
         submit_button = wait_for(lambda: self.browser.find_element_by_name("submit"))
@@ -66,8 +58,6 @@ class PollTest(FunctionalTest):
         self.assertIn("question", main_content)
         self.assertIn("choice 1", main_content)
         self.assertIn("choice 2", main_content)
-        self.assertIn("choice 3", main_content)
-        self.assertIn("choice 4", main_content)
 
         # She goes back to the polls' homepage.
         self.browser.get(self.live_server_url + reverse("polls:home"))
