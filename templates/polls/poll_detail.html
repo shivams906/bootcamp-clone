@@ -1,21 +1,35 @@
-{% extends 'base.html' %}
-
-{% block main %}
-{% if question %}
-<h4>{{ question }}</h4>
+{% extends 'base.html' %} {% block main %} {% if question %}
+<h2>Question:</h2>
+<h3>{{ question }}</h3>
 {% if error_message %}
-<p><strong>{{ error_message }}</strong></p>
-{% endif %}
-{% if question.choices %}
+<p class="error"><strong>{{ error_message }}</strong></p>
+{% endif %} {% if question.choices %}
+<h2>Choices:</h2>
 <form method="POST" action="{% url 'polls:vote' question.pk %}">
-    {% csrf_token %}
-{% for choice in question.choices.all %}
-<input type="radio" name="choice" id="choice{{forloop.counter}}" value={{choice.pk}}>
-<label for="choice{{ forloop.counter }}">{{ choice }} - {{ choice.votes }}</label>
-<br>
-{% endfor %}
-<input type="submit" name="submit" value="Vote">
+  {% csrf_token %}
+  <table>
+    <tr>
+      <th></th>
+      <th>Choice</th>
+      <th>Votes</th>
+    </tr>
+    {% for choice in question.choices.all %}
+    <tr>
+      <td>
+        <input
+          type="radio"
+          name="choice"
+          id="choice{{forloop.counter}}"
+          value="{{choice.pk}}"
+        />
+      </td>
+      <td><label for="choice{{ forloop.counter }}">{{ choice }}</label></td>
+      <td>
+        <label for="choice{{ forloop.counter }}">{{ choice.votes }}</label>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  <input type="submit" name="submit" value="Vote" />
 </form>
-{% endif %}
-{% endif %}
-{% endblock %}
+{% endif %} {% endif %} {% endblock %}

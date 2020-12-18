@@ -16,3 +16,30 @@ header > div.left .home {
   font-size: larger;
   font-weight: bolder;
 }
+
+table * {
+  text-align: center;
+}
+
+main {
+  width: 90%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+input[type="radio"] {
+  margin-bottom: 10px;
+}
+
+.error {
+  color: red;
+}
+
+textarea {
+  font-size: 18px;
+  width: 100%;
+}
+
+main li {
+  padding: 10px;
+}
