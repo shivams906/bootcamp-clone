@@ -1,10 +1,7 @@
-{% extends 'base.html' %}
-
-{% block main %}
+{% extends 'base.html' %} {% block main %}
 <form method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
-  {{ formset.as_p }}
-  <input type="submit" name="submit" value="Submit">
+  {% csrf_token %} {{ form.as_p }} {{ formset.as_p }}
+  <a href="#" id="new-choice">Add another choice</a>
+  <input type="submit" name="submit" value="Submit" />
 </form>
 {% endblock %}

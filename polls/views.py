@@ -32,7 +32,7 @@ class PollCreate(LoginRequiredMixin, generic.CreateView):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         ChoiceFormSet = inlineformset_factory(
-            Question, Choice, fields=("choice_text",), extra=4, can_delete=False
+            Question, Choice, fields=("choice_text",), extra=2, can_delete=True
         )
         context_data["formset"] = ChoiceFormSet()
         return context_data
@@ -40,7 +40,7 @@ class PollCreate(LoginRequiredMixin, generic.CreateView):
     def post(self, request, *args, **kwargs):
         form = QuestionModelForm(request.POST)
         ChoiceFormSet = inlineformset_factory(
-            Question, Choice, fields=("choice_text",), extra=4, can_delete=False
+            Question, Choice, fields=("choice_text",), extra=2, can_delete=True
         )
         if form.is_valid():
             question = form.save(author=request.user, commit=False)
