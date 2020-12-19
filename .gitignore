@@ -8,3 +8,4 @@ geckodriver.log
 node_modules
 package-lock.json
 jquery*.js
+.vscode
