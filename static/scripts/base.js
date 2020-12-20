@@ -28,3 +28,16 @@ $("#new-choice").on("click", function () {
   formCounter++;
   $("#id_choices-TOTAL_FORMS").val(formCounter);
 });
+
+$("textarea").on("input", function () {
+  $("#count").text(280 - $("textarea").val().length + " characters left");
+});
+
+$("textarea").on("focus", function () {
+  $("#count").text(280 - $("textarea").val().length + " characters left");
+});
+
+$("#feed_clear").on("click", function () {
+  $("textarea").val("");
+  $("#count").text(280 - $("textarea").val().length + " characters left");
+});

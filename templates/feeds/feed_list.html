@@ -2,19 +2,32 @@
 
 {% block main %}
 {% if user.is_authenticated %}
-<form action="{% url 'feeds:create'%}" method="POST">
-  {% csrf_token %} {{ form }} <input type="submit" name="submit" value="Post" />
+<form action="{% url 'feeds:create'%}" method="POST" id="feed_form">
+  {% csrf_token %}
+  {% if form.non_field_errors %}
+    {{ form.non_field_errors }}
+  {% endif %}
+  {% for hidden in form.hidden_fields %}
+    {{ hidden }}
+  {% endfor %}
+  {{ form.text.errors }}
+  {{ form.text }}
+  <br />
+  <input id="feed_submit" type="submit" name="submit" value="Post" />
+  <input id="feed_clear" type="button" name="clear" value="Clear" />
+  <small id="count"></small>
 </form>
 {% else %}
 <a href="{% url 'users:login' %}">Login</a> to post a feed
 {% endif %}
 {% if feed_list %}
-<ul class="feed_list">
+<div class="feed_list">
   {% for feed in feed_list %}
-  <li class="feed_item">
-    <a href="{% url 'users:profile' feed.author.pk %}">{{ feed.author }}</a> says:
+  <div class="feed_item">
+    <a href="{% url 'users:profile' feed.author.pk %}">{{ feed.author }}</a> at {{ feed.created_at }}:
     <br>
-    {{ feed.text }}</li>
+    <p>{{ feed.text|linebreaksbr }}</p>
+  </div>
   {% endfor %}
-</ul>
+</div>
 {% endif %} {% endblock %}

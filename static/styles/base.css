@@ -2,6 +2,11 @@
   box-sizing: border-box;
 }
 
+body {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
 header {
   display: flex;
   justify-content: space-between;
@@ -22,9 +27,9 @@ table * {
 }
 
 main {
-  width: 90%;
   max-width: 800px;
   margin: 0 auto;
+  width: 90%;
 }
 
 input[type="radio"] {
@@ -36,10 +41,33 @@ input[type="radio"] {
 }
 
 textarea {
-  font-size: 18px;
+  font-size: 16px;
   width: 100%;
 }
 
 main li {
   padding: 10px;
+}
+
+.feed_list,
+#feed_form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.feed_item {
+  border: 0.5px solid black;
+  border-radius: 10px;
+  margin-top: 10px;
+  padding: 10px;
+}
+
+#feed_form textarea {
+  border-radius: 10px;
+  resize: none;
+}
+
+#count {
+  opacity: 0.5;
+  float: right;
 }
