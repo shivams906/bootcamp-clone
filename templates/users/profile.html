@@ -1,5 +1,45 @@
 {% extends 'base.html' %}
 
 {% block main %}
-{{ user.name }}
+<h2>{{ user.name }}</h2>
+<h3>Feeds</h3>
+{% if user.feeds %}
+<ul>
+    {% for feed in user.feeds.all %}
+    <li>{{ feed|linebreaksbr }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+<h3>Articles</h3>
+{% if user.articles %}
+<ul>
+    {% for article in user.articles.all %}
+    <li><a href="{% url 'articles:detail' article.pk %}">{{ article }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+<h3>Questions (asked)</h3>
+{% if user.questions %}
+<ul>
+    {% for question in user.questions.all %}
+    <li><a href="{% url 'questions:detail' question.pk %}">{{ question }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+<h3>Questions (answered)</h3>
+{% if user.answers %}
+<ul>
+    {% for answer in user.answers.all %}
+    <li><a href="{% url 'questions:detail' answer.question.pk %}">{{ answer.question }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+<h3>Polls</h3>
+{% if user.polls %}
+<ul>
+    {% for poll in user.polls.all %}
+    <li><a href="{% url 'polls:detail' poll.pk %}">{{ poll }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
 {% endblock %}

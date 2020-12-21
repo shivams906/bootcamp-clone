@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load humanize %}
 
 {% block main %}
   {% if user.is_authenticated %}
@@ -10,10 +11,9 @@
     <ul>
       {% for article in article_list %}
         <li>
-          <a href="{% url 'articles:detail' article.pk %}">{{ article.title }}</a>
-          <br>
+          <a href="{% url 'articles:detail' article.pk %}"><h4>{{ article.title }}</h4></a>
           - by <a href="{% url 'users:profile' article.author.pk %}">{{ article.author }}</a>
-           on {{ article.created_at }}
+           {{ article.created_at|naturaltime }}
         </li>
       {% endfor %}
     </ul>

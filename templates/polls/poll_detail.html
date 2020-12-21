@@ -1,6 +1,11 @@
-{% extends 'base.html' %} {% block main %} {% if question %}
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block main %}
+{% if question %}
 <h2>Question:</h2>
 <h3>{{ question }}</h3>
+by <a href="{% url 'users:profile' question.author.pk %}">{{ question.author }}</a> {{ question.created_at|naturaltime }}
 {% if error_message %}
 <p class="error"><strong>{{ error_message }}</strong></p>
 {% endif %} {% if question.choices %}

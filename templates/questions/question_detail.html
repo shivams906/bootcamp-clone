@@ -1,19 +1,20 @@
 {% extends 'base.html' %}
+{% load humanize %}
 
 {% block main %}
 {% if question %}
 <h4>{{ question.title }}</h4>
 <strong>Author</strong> - <a href="{% url 'users:profile' question.author.pk %}">{{ question.author }}</a>
 <br>
-<strong>Created at</strong> - {{ question.created_at }}
-<p>{{ question.description }}</p>
+<strong>Created</strong> - {{ question.created_at|naturaltime }}
+<p>{{ question.description|linebreaksbr }}</p>
 <a href="{% url 'questions:answer' question.pk %}">Answer it</a>
 {% if answers %}
 <ul>
     {% for answer in answers %}
     <li>
-        {{ answer.author }} wrote on {{ answer.created_at }}:
-        <p>{{ answer.text }}</p>
+        <a href="{% url 'users:profile' answer.author.pk %}">{{ answer.author }}</a> wrote {{ answer.created_at|naturaltime }}:
+        <p>{{ answer.text|linebreaksbr }}</p>
     </li>
     {% endfor %}
 </ul>

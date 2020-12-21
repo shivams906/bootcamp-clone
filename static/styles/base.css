@@ -13,10 +13,6 @@ header {
   height: 50px;
 }
 
-header a {
-  text-decoration: none;
-}
-
 header > div.left .home {
   font-size: larger;
   font-weight: bolder;
@@ -43,6 +39,7 @@ input[type="radio"] {
 textarea {
   font-size: 16px;
   width: 100%;
+  resize: none;
 }
 
 main li {
@@ -62,12 +59,17 @@ main li {
   padding: 10px;
 }
 
-#feed_form textarea {
-  border-radius: 10px;
-  resize: none;
-}
-
 #count {
   opacity: 0.5;
   float: right;
+}
+
+a {
+  color: black;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+  width: 100%;
 }

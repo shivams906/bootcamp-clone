@@ -26,4 +26,4 @@ class Feed(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return self.text[:20]
+        return self.text

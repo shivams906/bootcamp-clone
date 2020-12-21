@@ -48,4 +48,4 @@ class Answer(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.text[100:]
+        return self.text[:100]

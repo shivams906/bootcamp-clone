@@ -14,5 +14,5 @@ class FeedFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Feed
 
-    text = factory.Faker("text")
+    text = factory.Faker("text", max_nb_chars=280)
     author = factory.SubFactory(UserFactory)

@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
+{% load humanize %}
 
 {% block main %}
   {% if article %}
     <h3>{{ article.title }}</h3>
     Author - <a href="{% url 'users:profile' article.author.pk %}">{{ article.author }}</a>
     <br>
-    Created at - {{ article.created_at }}
-    <p>{{ article.text }}
+    Created - {{ article.created_at|naturaltime }}
+    <p>{{ article.text|linebreaksbr }}
   {% endif %}
 {% endblock %}

@@ -14,6 +14,6 @@ class ArticleFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Article
 
-    title = factory.Faker("text")
-    text = factory.Faker("text")
+    title = factory.Faker("text", max_nb_chars=255)
+    text = factory.Faker("text", max_nb_chars=3000)
     author = factory.SubFactory(UserFactory)

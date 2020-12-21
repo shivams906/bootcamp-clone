@@ -14,7 +14,7 @@ class QuestionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Question
 
-    title = factory.Faker("text")
+    title = factory.Faker("text", max_nb_chars=255)
     description = factory.Faker("text")
     author = factory.SubFactory(UserFactory)
 

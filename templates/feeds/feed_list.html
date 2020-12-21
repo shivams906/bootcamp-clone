@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load humanize %}
 
 {% block main %}
 {% if user.is_authenticated %}
@@ -24,7 +25,7 @@
 <div class="feed_list">
   {% for feed in feed_list %}
   <div class="feed_item">
-    <a href="{% url 'users:profile' feed.author.pk %}">{{ feed.author }}</a> at {{ feed.created_at }}:
+    <a href="{% url 'users:profile' feed.author.pk %}">{{ feed.author }}</a> {{ feed.created_at|naturaltime }}:
     <br>
     <p>{{ feed.text|linebreaksbr }}</p>
   </div>
