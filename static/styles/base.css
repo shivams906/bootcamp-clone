@@ -73,3 +73,17 @@ input[type="password"],
 input[type="email"] {
   width: 100%;
 }
+
+#user_activity {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#user_activity thead {
+  background-color: rgb(187, 187, 187);
+}
+
+#user_activity th,
+#user_activity td {
+  border: 1px solid black;
+}

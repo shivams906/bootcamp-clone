@@ -1,7 +1,28 @@
 {% extends 'base.html' %}
 
 {% block main %}
-<h2>{{ user.name }}</h2>
+<h2>{{ user }}</h2>
+<table id="user_activity">
+    <caption>A count of all the activities of {{ user }}.</caption>
+    <thead>
+        <tr>
+            <th scope="col">Feeds</th>
+            <th scope="col">Articles</th>
+            <th scope="col">Questions</th>
+            <th scope="col">Answers</th>
+            <th scope="col">polls</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{ user.feeds.count }}</td>
+            <td>{{ user.articles.count }}</td>
+            <td>{{ user.questions.count }}</td>
+            <td>{{ user.answers.count }}</td>
+            <td>{{ user.polls.count }}</td>
+        </tr>
+    </tbody>
+</table>
 <h3>Feeds</h3>
 {% if user.feeds %}
 <ul>
