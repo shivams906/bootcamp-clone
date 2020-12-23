@@ -2,6 +2,11 @@
 
 {% block main %}
 <h2>{{ user }}</h2>
+{% if request.user in user.followers.all %}
+<a href="{% url 'users:unfollow' user.pk %}">unfollow</a>
+{% else %}
+<a href="{% url 'users:follow' user.pk %}">follow</a>
+{% endif %}
 <table id="user_activity">
     <caption>A count of all the activities of {{ user }}.</caption>
     <thead>

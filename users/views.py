@@ -1,8 +1,10 @@
 """
 Contains views for users app.
 """
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
-from django.views import generic
+from django.views import generic, View
 from users.forms import UserCreationForm
 from users.models import User
 
@@ -27,3 +29,33 @@ class Profile(generic.DetailView):
 
     queryset = User.objects.all()
     template_name = "users/profile.html"
+
+
+class Follow(LoginRequiredMixin, View):
+    """
+    View class for following users.
+    """
+
+    def get(self, request, *args, **kwargs):
+        user = get_object_or_404(User, pk=kwargs["pk"])
+        user.follow(request.user)
+        return redirect(user)
+
+
+class Unfollow(LoginRequiredMixin, View):
+    """
+    View class for unfollowing users.
+    """
+
+    def get(self, request, *args, **kwargs):
+        user = get_object_or_404(User, pk=kwargs["pk"])
+        user.unfollow(request.user)
+        return redirect(user)
+
+
+class Network(generic.TemplateView):
+    """
+    View class for listing folllowers and followees.
+    """
+
+    template_name = "users/network.html"

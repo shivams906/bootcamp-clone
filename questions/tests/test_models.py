@@ -69,7 +69,7 @@ class AnswerModelTestCase(TestCase):
         Tests the string representation of Answer.
         """
         answer = AnswerFactory()
-        self.assertEqual(str(answer), answer.text[100:])
+        self.assertEqual(str(answer), answer.text[:100])
 
     def test_id_is_saved_as_uuid(self):
         """

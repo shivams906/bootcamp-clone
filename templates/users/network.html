@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<h3>Followers</h3>
+<ul id="followers_list">
+    {% for follower in request.user.followers.all %}
+    <li><a href="{% url 'users:profile' follower.pk %}">{{ follower }}</a></li>
+    {% endfor %}
+</ul>
+<h3>Followees</h3>
+<ul id="followees_list">
+    {% for followee in request.user.followees.all %}
+    <li><a href="{% url 'users:profile' followee.pk %}">{{ followee }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

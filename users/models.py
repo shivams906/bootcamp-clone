@@ -116,6 +116,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         ),
     )
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
+    followers = models.ManyToManyField(
+        "self", related_name="followees", symmetrical=False, through="Followership"
+    )
 
     USERNAME_FIELD = "email"
     EMAIL_FIELD = "email"
@@ -155,3 +158,33 @@ class User(AbstractBaseUser, PermissionsMixin):
     def email_user(self, subject, message, from_email=None, **kwargs):
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+    def follow(self, user=None):
+        """
+        Add the user as follower.
+        """
+        if user is not None:
+            self.followers.add(user)
+            self.save()
+
+    def unfollow(self, user=None):
+        """
+        Removes the user as follower.
+        """
+        if user is not None:
+            self.followers.remove(user)
+            self.save()
+
+
+class Followership(models.Model):
+    """
+    Defines a followership between two entities.
+    """
+
+    followee = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="followers_followerships"
+    )
+    follower = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="followees_followerships"
+    )
+    start_date = models.DateTimeField(auto_now_add=True)

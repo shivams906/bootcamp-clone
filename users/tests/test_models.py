@@ -7,7 +7,7 @@ from django.db import IntegrityError
 from django.test import TestCase
 from faker import Faker
 from users.factories import UserFactory
-from users.models import User
+from users.models import Followership, User
 
 fake = Faker()
 
@@ -122,3 +122,46 @@ class UserModelTestCase(TestCase):
         from_email = "test@test.test"
         user.email_user(subject, message, from_email)
         mock_send_mail.assert_called_with(subject, message, from_email, [user.email])
+
+    def test_follow(self):
+        """
+        Tests that follow works.
+        """
+        user = UserFactory()
+        anotherUser = UserFactory()
+        user.follow(user=anotherUser)
+        self.assertEqual(user.followers.count(), 1)
+        self.assertIn(anotherUser, user.followers.all())
+        self.assertEqual(anotherUser.followees.count(), 1)
+        self.assertIn(user, anotherUser.followees.all())
+
+    def test_unfollow(self):
+        """
+        Tests that unfollow works.
+        """
+        user = UserFactory()
+        anotherUser = UserFactory()
+        user.follow(user=anotherUser)
+        user.unfollow(user=anotherUser)
+        self.assertEqual(user.followers.count(), 0)
+        self.assertNotIn(anotherUser, user.followers.all())
+        self.assertEqual(anotherUser.followees.count(), 0)
+        self.assertNotIn(user, anotherUser.followees.all())
+
+
+class FollowershipTestCase(TestCase):
+    """
+    Tests for Followership model.
+    """
+
+    def test_valid_data_creates_followership(self):
+        """
+        Tests that valid data creates a followership.
+        """
+        followee = UserFactory()
+        follower = UserFactory()
+        followership = Followership.objects.create(followee=followee, follower=follower)
+        self.assertEqual(Followership.objects.count(), 1)
+        self.assertEqual(Followership.objects.first(), followership)
+        self.assertIn(follower, followee.followers.all())
+        self.assertIn(followee, follower.followees.all())

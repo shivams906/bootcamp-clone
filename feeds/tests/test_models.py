@@ -33,7 +33,7 @@ class FeedTestCase(TestCase):
         Tests the string representation of Feed object.
         """
         feed = FeedFactory.build()
-        self.assertEqual(str(feed), feed.text[:20])
+        self.assertEqual(str(feed), feed.text)
 
     def test_feeds_are_ordered_from_new_to_old(self):
         """

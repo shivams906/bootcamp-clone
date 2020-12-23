@@ -2,8 +2,9 @@
 Functional tests for signup, login and logout (and other account functions).
 """
 from django.urls import reverse
+from users.factories import UserFactory
 from users.models import User
-from .base import fake, FunctionalTest, wait_for
+from .base import fake, FunctionalTest, wait_for, webdriver
 
 
 class SignupLoginLogoutTestCase(FunctionalTest):
@@ -96,3 +97,85 @@ class SignupLoginLogoutTestCase(FunctionalTest):
         self.assertIn("Signup", header_content)
         self.assertNotIn(user.name, header_content)
         self.assertNotIn("Logout", header_content)
+
+    def test_follow_unfollow(self):
+        """
+        Tests that user can follow and unfollow other users.
+        """
+        self.login("Meredith")
+        meredith_browser = self.browser
+        self.browser = webdriver.Firefox()
+
+        # Edith logs in and goes to Meredith's profile page.
+        self.login("Edith")
+        meredith = User.objects.get(name="Meredith")
+        self.browser.get(
+            self.live_server_url + reverse("users:profile", args=[meredith.pk])
+        )
+
+        # She sees a follow link.
+        follow_link = wait_for(lambda: self.browser.find_element_by_link_text("follow"))
+
+        # She clicks on it.
+        follow_link.click()
+
+        # The page reloads and follow link's text changes to unfollow.
+        wait_for(lambda: self.browser.find_element_by_link_text("unfollow"))
+
+        # She goes to the network page.
+        self.browser.get(self.live_server_url + reverse("users:network"))
+
+        # She sees meredith's name in the followees' list
+        followees_list = wait_for(
+            lambda: self.browser.find_element_by_id("followees_list")
+        )
+        self.assertIn("Meredith", followees_list.text)
+
+        # Meredith goes to network page in her browser.
+        edith_browser = self.browser
+        self.browser = meredith_browser
+        self.browser.get(self.live_server_url + reverse("users:network"))
+
+        # She sees Edith's name in followers' list
+        followers_list = wait_for(
+            lambda: self.browser.find_element_by_id("followers_list")
+        )
+        self.assertIn("Edith", followers_list.text)
+
+        # Edith goes to Meredith's profile page.
+        meredith_browser = self.browser
+        self.browser = edith_browser
+        self.browser.get(
+            self.live_server_url + reverse("users:profile", args=[meredith.pk])
+        )
+
+        # She clicks on the unfollow link.
+        unfollow_link = wait_for(
+            lambda: self.browser.find_element_by_link_text("unfollow")
+        )
+        unfollow_link.click()
+
+        # The page reloads and unfollow link's text changes to follow.
+        wait_for(lambda: self.browser.find_element_by_link_text("follow"))
+
+        # She goes to the network page.
+        self.browser.get(self.live_server_url + reverse("users:network"))
+
+        # She does not see meredith's name in the followees' list
+        followees_list = wait_for(
+            lambda: self.browser.find_element_by_id("followees_list")
+        )
+        self.assertNotIn("Meredith", followees_list.text)
+
+        # Meredith goes to network page in her browser.
+        edith_browser = self.browser
+        self.browser = meredith_browser
+        self.browser.get(self.live_server_url + reverse("users:network"))
+
+        # She does not see Edith's name in followers' list
+        followers_list = wait_for(
+            lambda: self.browser.find_element_by_id("followers_list")
+        )
+        self.assertNotIn("Edith", followers_list.text)
+
+        edith_browser.quit()
