@@ -87,3 +87,9 @@ input[type="email"] {
 #user_activity td {
   border: 1px solid black;
 }
+
+form[name="signup_form"],
+form[name="login_form"] {
+  max-width: 600px;
+  margin: 0 auto;
+}
