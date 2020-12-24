@@ -14,6 +14,7 @@ class ArticleList(ListView):
     """
 
     queryset = Article.objects.all()
+    paginate_by = 10
 
 
 class ArticleCreate(LoginRequiredMixin, CreateView):

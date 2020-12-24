@@ -14,6 +14,7 @@ class FeedList(generic.ListView):
     """
 
     queryset = Feed.objects.all()
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
