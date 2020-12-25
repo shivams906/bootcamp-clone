@@ -127,6 +127,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     class Meta:
+        ordering = ["name"]
         verbose_name = _("user")
         verbose_name_plural = _("users")
 

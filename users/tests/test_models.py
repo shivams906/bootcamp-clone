@@ -148,6 +148,16 @@ class UserModelTestCase(TestCase):
         self.assertEqual(anotherUser.followees.count(), 0)
         self.assertNotIn(user, anotherUser.followees.all())
 
+    def test_users_are_ordered_alphabetically(self):
+        """
+        Tests that users are ordered alphabetically.
+        """
+        user1 = UserFactory(name="a")
+        user2 = UserFactory(name="b")
+        users = User.objects.all()
+        self.assertEqual(user1, users[0])
+        self.assertEqual(user2, users[1])
+
 
 class FollowershipTestCase(TestCase):
     """
