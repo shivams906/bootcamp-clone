@@ -9,6 +9,7 @@
         <option value="articles">Articles</option>
         <option value="questions">Questions</option>
         <option value="polls">Polls</option>
+        <option value="users">Users</option>
     </select>
     <input type="submit" value="Search">
 </form>
@@ -22,8 +23,10 @@
         {% else %}
         {{ result }}
         {% endif %}
+        {% if request.GET.category != 'users' %}
         by <a href="{{ result.author.get_absolute_url }}">{{ result.author }}</a>
         {{ result.created_at|naturaltime }}
+        {% endif %}
     </li>
     {% endfor %}
 </ul>
