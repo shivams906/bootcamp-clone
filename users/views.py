@@ -53,9 +53,11 @@ class Unfollow(LoginRequiredMixin, View):
         return redirect(user)
 
 
-class Network(generic.TemplateView):
+class Network(generic.ListView):
     """
     View class for listing folllowers and followees.
     """
 
+    queryset = User.objects.all()
     template_name = "users/network.html"
+    paginate_by = 10
