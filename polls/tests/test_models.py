@@ -80,6 +80,16 @@ class QuestionModelTestCase(TestCase):
         self.assertEqual(choice1.votes, 1)
         self.assertEqual(choice2.votes, 0)
 
+    def test_questions_are_ordered_from_new_to_old(self):
+        """
+        Tests that questions are ordered from new to old.
+        """
+        question1 = QuestionFactory()
+        question2 = QuestionFactory()
+        questions = Question.objects.all()
+        self.assertEqual(question1, questions[1])
+        self.assertEqual(question2, questions[0])
+
 
 class ChoiceModelTestCase(TestCase):
     """

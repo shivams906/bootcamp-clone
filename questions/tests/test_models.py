@@ -48,6 +48,16 @@ class QuestionModelTestCase(TestCase):
         question = QuestionFactory()
         self.assertIsInstance(question.id, uuid.UUID)
 
+    def test_questions_are_ordered_from_new_to_old(self):
+        """
+        Tests that questions are ordered from new to old.
+        """
+        question1 = QuestionFactory()
+        question2 = QuestionFactory()
+        questions = Question.objects.all()
+        self.assertEqual(question1, questions[1])
+        self.assertEqual(question2, questions[0])
+
 
 class AnswerModelTestCase(TestCase):
     """
@@ -77,3 +87,13 @@ class AnswerModelTestCase(TestCase):
         """
         answer = AnswerFactory()
         self.assertIsInstance(answer.id, uuid.UUID)
+
+    def test_answers_are_ordered_from_new_to_old(self):
+        """
+        Tests that answers are ordered from new to old.
+        """
+        answer1 = AnswerFactory()
+        answer2 = AnswerFactory()
+        answers = Answer.objects.all()
+        self.assertEqual(answer1, answers[1])
+        self.assertEqual(answer2, answers[0])

@@ -48,3 +48,13 @@ class ArticleModelTestCase(TestCase):
         """
         article = ArticleFactory()
         self.assertIsInstance(article.id, uuid.UUID)
+
+    def test_articles_are_ordered_from_new_to_old(self):
+        """
+        Tests that articles are ordered from new to old.
+        """
+        article1 = ArticleFactory()
+        article2 = ArticleFactory()
+        articles = Article.objects.all()
+        self.assertEqual(article1, articles[1])
+        self.assertEqual(article2, articles[0])
