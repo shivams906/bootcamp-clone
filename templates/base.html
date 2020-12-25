@@ -1,40 +1,40 @@
 {% load static %}
 <html>
-  <head>
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{% static 'styles/base.css' %}"
-    />
-    <title>{% block title %}Bootcamp{% endblock %}</title>
-  </head>
-  <body>
-    {% block header %}
-    <header>
-      <div class="left">
-        <a href="{% url 'home' %}">
-          <span class="home">BootCamp</span>
-        </a>
-        <a href="{% url 'feeds:home' %}">Feeds</a>
-        <a href="{% url 'articles:home' %}">Articles</a>
-        <a href="{% url 'questions:home' %}">Questions</a>
-        <a href="{% url 'polls:home' %}">Polls</a>
-        <a href="{% url 'users:network' %}">Network</a>
-      </div>
-      <div class="right">
-        {% if request.user.is_authenticated %}
-        <a href="{% url 'users:profile' request.user.pk %}">{{ request.user.name }}</a>
-        <a href="{% url 'users:logout' %}">Logout</a>
-        {% else %}
-        <a href="{% url 'users:login' %}">Login</a>
-        <a href="{% url 'users:signup' %}">Signup</a>
-        {% endif %}
-      </div>
-    </header>
-    {% endblock %}
-    <main>{% block main %} {% endblock %}</main>
 
-    <script src="{% static 'scripts/jquery-3.5.1.js' %}"></script>
-    <script src="{% static 'scripts/base.js' %}"></script>
-  </body>
+<head>
+  <link rel="stylesheet" type="text/css" href="{% static 'styles/base.css' %}" />
+  <title>{% block title %}Bootcamp{% endblock %}</title>
+</head>
+
+<body>
+  {% block header %}
+  <header>
+    <div class="left">
+      <a href="{% url 'home' %}">
+        <span class="home">BootCamp</span>
+      </a>
+      <a href="{% url 'feeds:home' %}">Feeds</a>
+      <a href="{% url 'articles:home' %}">Articles</a>
+      <a href="{% url 'questions:home' %}">Questions</a>
+      <a href="{% url 'polls:home' %}">Polls</a>
+      <a href="{% url 'users:network' %}">Network</a>
+      <a href="{% url 'search:home' %}">Search</a>
+    </div>
+    <div class="right">
+      {% if request.user.is_authenticated %}
+      <a href="{% url 'users:profile' request.user.pk %}">{{ request.user.name }}</a>
+      <a href="{% url 'users:logout' %}">Logout</a>
+      {% else %}
+      <a href="{% url 'users:login' %}">Login</a>
+      <a href="{% url 'users:signup' %}">Signup</a>
+      {% endif %}
+    </div>
+  </header>
+  {% endblock %}
+  <main>{% block main %} {% endblock %}</main>
+
+  <script src="{% static 'scripts/jquery-3.5.1.js' %}"></script>
+  <script src="{% static 'scripts/base.js' %}"></script>
+</body>
+
 </html>

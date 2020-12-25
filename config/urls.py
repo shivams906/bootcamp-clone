@@ -24,5 +24,6 @@ urlpatterns = [
     path("feeds/", include("feeds.urls")),
     path("polls/", include("polls.urls")),
     path("questions/", include("questions.urls")),
+    path("search/", include("search.urls")),
     path("users/", include("users.urls")),
 ]

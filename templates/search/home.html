@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<form action="{% url 'search:home' %}" method="get" name="search_form">
+    <input type="text" name="q">
+    <select name="category" id="category">
+        <option value="feeds">Feeds</option>
+        <option value="articles">Articles</option>
+        <option value="questions">Questions</option>
+        <option value="polls">Polls</option>
+    </select>
+    <input type="submit" value="Search">
+</form>
+{% if results %}
+<h2>Results for '{{ request.GET.q }}' in {{ request.GET.category }}</h2>
+<ul id="result_list">
+    {% for result in results %}
+    <li id="result_item">
+        {% if request.GET.category != 'feeds' %}
+        <a href="{{ result.get_absolute_url }}">{{ result }}</a>
+        {% else %}
+        {{ result }}
+        {% endif %}
+        by <a href="{{ result.author.get_absolute_url }}">{{ result.author }}</a>
+    </li>
+    {% endfor %}
+</ul>
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+        <a href="?q={{ request.GET.q }}&category={{ request.GET.category }}&page=1">&laquo; first</a>
+        <a
+            href="?q={{ request.GET.q }}&category={{ request.GET.category }}&page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+        <a
+            href="?q={{ request.GET.q }}&category={{ request.GET.category }}&page={{ page_obj.next_page_number }}">next</a>
+        <a href="?q={{ request.GET.q }}&category={{ request.GET.category }}&page={{ page_obj.paginator.num_pages }}">last
+            &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% else %}
+<strong>No results found.</strong>
+{% endif %}
+{% endblock %}
