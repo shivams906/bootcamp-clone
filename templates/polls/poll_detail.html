@@ -5,7 +5,7 @@
 {% if question %}
 <h2>Question:</h2>
 <h3>{{ question }}</h3>
-by <a href="{% url 'users:profile' question.author.pk %}">{{ question.author }}</a> {{ question.created_at|naturaltime }}
+by <a href="{{ question.author.get_absolute_url }}">{{ question.author }}</a> {{ question.created_at|naturaltime }}
 {% if error_message %}
 <p class="error"><strong>{{ error_message }}</strong></p>
 {% endif %} {% if question.choices %}
@@ -21,12 +21,7 @@ by <a href="{% url 'users:profile' question.author.pk %}">{{ question.author }}<
     {% for choice in question.choices.all %}
     <tr>
       <td>
-        <input
-          type="radio"
-          name="choice"
-          id="choice{{forloop.counter}}"
-          value="{{choice.pk}}"
-        />
+        <input type="radio" name="choice" id="choice{{forloop.counter}}" value="{{choice.pk}}" />
       </td>
       <td><label for="choice{{ forloop.counter }}">{{ choice }}</label></td>
       <td>

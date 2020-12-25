@@ -11,10 +11,10 @@
 <ul>
   {% for article in article_list %}
   <li>
-    <a href="{% url 'articles:detail' article.pk %}">
+    <a href="{{ article.get_absolute_url }}">
       <h4>{{ article.title }}</h4>
     </a>
-    - by <a href="{% url 'users:profile' article.author.pk %}">{{ article.author }}</a>
+    - by <a href="{{ article.author.get_absolute_url }}">{{ article.author }}</a>
     {{ article.created_at|naturaltime }}
   </li>
   {% endfor %}

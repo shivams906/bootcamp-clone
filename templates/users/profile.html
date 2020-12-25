@@ -42,7 +42,7 @@
 {% if user.articles %}
 <ul>
     {% for article in user.articles.all %}
-    <li><a href="{% url 'articles:detail' article.pk %}">{{ article }}</a></li>
+    <li><a href="{{ article.get_absolute_url }}">{{ article }}</a></li>
     {% endfor %}
 </ul>
 {% endif %}
@@ -50,7 +50,7 @@
 {% if user.questions %}
 <ul>
     {% for question in user.questions.all %}
-    <li><a href="{% url 'questions:detail' question.pk %}">{{ question }}</a></li>
+    <li><a href="{{ question.get_absolute_url }}">{{ question }}</a></li>
     {% endfor %}
 </ul>
 {% endif %}
@@ -58,7 +58,7 @@
 {% if user.answers %}
 <ul>
     {% for answer in user.answers.all %}
-    <li><a href="{% url 'questions:detail' answer.question.pk %}">{{ answer.question }}</a></li>
+    <li><a href="{{ answer.question.get_absolute_url }}">{{ answer.question }}</a></li>
     {% endfor %}
 </ul>
 {% endif %}
@@ -66,7 +66,7 @@
 {% if user.polls %}
 <ul>
     {% for poll in user.polls.all %}
-    <li><a href="{% url 'polls:detail' poll.pk %}">{{ poll }}</a></li>
+    <li><a href="{{ poll.get_absolute_url }}">{{ poll }}</a></li>
     {% endfor %}
 </ul>
 {% endif %}

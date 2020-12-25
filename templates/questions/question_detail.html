@@ -4,7 +4,7 @@
 {% block main %}
 {% if question %}
 <h4>{{ question.title }}</h4>
-<strong>Author</strong> - <a href="{% url 'users:profile' question.author.pk %}">{{ question.author }}</a>
+<strong>Author</strong> - <a href="{{ question.author.get_absolute_url }}">{{ question.author }}</a>
 <br>
 <strong>Created</strong> - {{ question.created_at|naturaltime }}
 <p>{{ question.description|linebreaksbr }}</p>
@@ -13,7 +13,8 @@
 <ul>
     {% for answer in answers %}
     <li>
-        <a href="{% url 'users:profile' answer.author.pk %}">{{ answer.author }}</a> wrote {{ answer.created_at|naturaltime }}:
+        <a href="{{ answer.author.get_absolute_url }}">{{ answer.author }}</a> wrote {{ answer.created_at|naturaltime
+        }}:
         <p>{{ answer.text|linebreaksbr }}</p>
     </li>
     {% endfor %}

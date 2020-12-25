@@ -11,9 +11,9 @@
 <ul>
     {% for question in question_list %}
     <li>
-        <a href="{% url 'polls:detail' question.pk %}">{{ question }}</a>
+        <a href="{{ question.get_absolute_url }}">{{ question }}</a>
         - by
-        <a href="{% url 'users:profile' question.author.pk %}">{{ question.author }}</a>
+        <a href="{{ question.author.get_absolute_url }}">{{ question.author }}</a>
         {{ question.created_at|naturaltime }}
     </li>
     {% endfor %}
