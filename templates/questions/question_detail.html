@@ -13,8 +13,8 @@
 <ul>
     {% for answer in answers %}
     <li>
-        <a href="{{ answer.author.get_absolute_url }}">{{ answer.author }}</a> wrote {{ answer.created_at|naturaltime
-        }}:
+        <a href="{{ answer.author.get_absolute_url }}">{{ answer.author }}</a>
+        wrote {{ answer.created_at|naturaltime }}:
         <p>{{ answer.text|linebreaksbr }}</p>
     </li>
     {% endfor %}
