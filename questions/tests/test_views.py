@@ -100,16 +100,6 @@ class QuestionDetailTestCase(TestCase):
         self.assertIn("question", response.context_data)
         self.assertEqual(response.context_data["question"], question)
 
-    def test_returns_answers_to_the_question(self):
-        """
-        Tests that view returns answers to the question object.
-        """
-        answer = AnswerFactory()
-        request = RequestFactory().get("")
-        response = QuestionDetail.as_view()(request, pk=answer.question.pk)
-        self.assertIn("answers", response.context_data)
-        self.assertIn(answer, response.context_data["answers"])
-
 
 class AnswerCreateTestCase(TestCase):
     """

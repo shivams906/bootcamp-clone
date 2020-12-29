@@ -38,12 +38,6 @@ class QuestionDetail(generic.DetailView):
 
     queryset = Question.objects.all()
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        answers = Answer.objects.filter(question=context_data["question"])
-        context_data["answers"] = answers
-        return context_data
-
 
 class AnswerCreate(LoginRequiredMixin, generic.CreateView):
     """
