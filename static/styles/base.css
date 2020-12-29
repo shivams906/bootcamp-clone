@@ -2,6 +2,16 @@
   box-sizing: border-box;
 }
 
+::selection {
+  background-color: black;
+  color: white;
+}
+
+::-moz-selection {
+  background-color: black;
+  color: white;
+}
+
 body {
   max-width: 1000px;
   margin: 0 auto;
