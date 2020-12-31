@@ -5,9 +5,10 @@ import uuid
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
+from core.models import TimeStampedModel
 
 
-class Question(models.Model):
+class Question(TimeStampedModel):
     """
     Model class for questions.
     """
@@ -18,8 +19,6 @@ class Question(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="polls"
     )
     voters = models.ManyToManyField(settings.AUTH_USER_MODEL)
-    created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-created_at"]
@@ -41,7 +40,7 @@ class Question(models.Model):
             choice.save()
 
 
-class Choice(models.Model):
+class Choice(TimeStampedModel):
     """
     Model class for choices.
     """
@@ -52,8 +51,6 @@ class Choice(models.Model):
         Question, on_delete=models.CASCADE, related_name="choices"
     )
     votes = models.IntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.choice_text

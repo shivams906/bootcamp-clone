@@ -5,9 +5,10 @@ import uuid
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
+from core.models import TimeStampedModel
 
 
-class Article(models.Model):
+class Article(TimeStampedModel):
     """
     Class for article model.
     """
@@ -18,8 +19,6 @@ class Article(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="articles"
     )
-    created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-created_at"]

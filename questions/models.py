@@ -5,9 +5,10 @@ import uuid
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
+from core.models import TimeStampedModel
 
 
-class Question(models.Model):
+class Question(TimeStampedModel):
     """
     Model class for questions.
     """
@@ -18,8 +19,6 @@ class Question(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="questions"
     )
-    created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-created_at"]
@@ -34,7 +33,7 @@ class Question(models.Model):
         return reverse("questions:detail", args=[self.pk])
 
 
-class Answer(models.Model):
+class Answer(TimeStampedModel):
     """
     Model class for answers.
     """
@@ -47,8 +46,6 @@ class Answer(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="answers"
     )
-    created_at = models.DateTimeField(auto_now_add=True)
-    modified_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-created_at"]

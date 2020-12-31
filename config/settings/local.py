@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     # local apps
     "articles.apps.ArticlesConfig",
+    "core.apps.CoreConfig",
     "feeds.apps.FeedsConfig",
     "polls.apps.PollsConfig",
     "questions.apps.QuestionsConfig",
