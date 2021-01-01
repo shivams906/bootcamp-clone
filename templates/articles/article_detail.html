@@ -4,9 +4,17 @@
 {% block main %}
 {% if article %}
 <h3>{{ article.title }}</h3>
+{% if request.user == article.author %}
+<a href="{% url 'articles:edit' article.pk %}">Edit</a>
+{% endif %}
+<br>
 Author - <a href="{{ article.author.get_absolute_url }}">{{ article.author }}</a>
 <br>
-Created - {{ article.created_at|naturaltime }}
-<p>{{ article.text|linebreaksbr }}
-  {% endif %}
-  {% endblock %}
+{% if article.published %}
+Published at: {{ article.published_at|naturaltime }}
+{% else %}
+<strong>Not published</strong>
+{% endif %}
+<p>{{ article.text|linebreaksbr }}</p>
+{% endif %}
+{% endblock %}

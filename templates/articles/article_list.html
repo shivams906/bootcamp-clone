@@ -4,13 +4,14 @@
 {% block main %}
 {% if user.is_authenticated %}
 <a href="{% url 'articles:create' %}">Create a new article</a>
+<a href="{% url 'articles:drafts' %}">My drafts</a>
 {% else %}
 <a href="{% url 'users:login' %}">Login</a> to add an article
 {% endif %}
 {% if article_list %}
-<ul>
+<ul id="article_list">
   {% for article in article_list %}
-  <li>
+  <li class="article_item">
     <a href="{{ article.get_absolute_url }}">
       <h4>{{ article.title }}</h4>
     </a>

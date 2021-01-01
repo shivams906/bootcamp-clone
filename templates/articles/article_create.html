@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
 
 {% block main %}
-  <form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit", name="submit", value="Post">
-  </form>
+<form method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  {% if object.published %}
+  <input type="submit" name="update" value="Update">
+  {% else %}
+  <input type="submit" name="publish" value="Publish">
+  <input type="submit" name="draft" value="Save as draft">
+  {% endif %}
+</form>
 {% endblock %}

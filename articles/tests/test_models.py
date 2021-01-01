@@ -58,3 +58,22 @@ class ArticleModelTestCase(TestCase):
         articles = Article.objects.all()
         self.assertEqual(article1, articles[1])
         self.assertEqual(article2, articles[0])
+
+    def test_publish(self):
+        """
+        Tests that publish works.
+        """
+        article = ArticleFactory()
+        self.assertIsNone(article.published_at)
+        article.publish()
+        self.assertIsNotNone(article.published_at)
+
+    def test_published_returns_true_or_false_based_on_pulished_at_field(self):
+        """
+        Tests that published returns true when published_at field have a value
+        and false otherwise.
+        """
+        article = ArticleFactory()
+        self.assertFalse(article.published)
+        article.publish()
+        self.assertTrue(article.published)

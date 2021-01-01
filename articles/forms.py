@@ -17,12 +17,17 @@ class ArticleModelForm(forms.ModelForm):
             "text",
         )
 
-    def save(self, author=None, commit=True):
-        article = Article(
-            title=self.cleaned_data["title"],
-            text=self.cleaned_data["text"],
-            author=author,
-        )
+    def save(self, author=None, commit=True, instance=None):
+        if instance:
+            instance.title = self.cleaned_data["title"]
+            instance.text = self.cleaned_data["text"]
+            article = instance
+        else:
+            article = Article(
+                title=self.cleaned_data["title"],
+                text=self.cleaned_data["text"],
+                author=author,
+            )
         if commit:
             article.save()
         return article
