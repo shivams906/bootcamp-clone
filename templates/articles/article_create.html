@@ -10,5 +10,6 @@
   <input type="submit" name="publish" value="Publish">
   <input type="submit" name="draft" value="Save as draft">
   {% endif %}
+  <a href="{% url 'articles:home' %}">Cancel</a>
 </form>
 {% endblock %}

@@ -9,5 +9,6 @@ Bootcamp - Signup
     {% csrf_token %}
     {{ form.as_p }}
     <input type='submit' name='submit' value='Signup'>
+    If you have an account, <a href="{% url 'users:login' %}">Login</a>
 </form>
 {% endblock %}
