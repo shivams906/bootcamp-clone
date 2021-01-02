@@ -6,10 +6,11 @@
   {{ form.as_p }}
   {% if object.published %}
   <input type="submit" name="update" value="Update">
+  <a href="{% url 'articles:detail' object.pk %}">Cancel</a>
   {% else %}
   <input type="submit" name="publish" value="Publish">
   <input type="submit" name="draft" value="Save as draft">
-  {% endif %}
   <a href="{% url 'articles:home' %}">Cancel</a>
+  {% endif %}
 </form>
 {% endblock %}
