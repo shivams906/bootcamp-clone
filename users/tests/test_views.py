@@ -8,7 +8,7 @@ from faker import Faker
 from users.factories import UserFactory
 from users.forms import UserCreationForm
 from users.models import Followership, User
-from users.views import Follow, SignUp, Profile, Unfollow
+from users.views import Follow, Network, Profile, SignUp, Unfollow
 
 fake = Faker()
 
@@ -179,3 +179,98 @@ class UnfollowTestCase(TestCase):
         response = Follow.as_view()(request, pk=user.pk)
         self.assertEqual(response.status_code, 302)
         self.assertIn(reverse("users:login"), response.url)
+
+
+class NetworkTestCase(TestCase):
+    """
+    Test class for Network view.
+    """
+
+    def test_returns_all_users_if_filter_is_all(self):
+        """
+        Tests that returns all users if filter is all.
+        """
+        user1 = UserFactory()
+        user2 = UserFactory()
+        request = RequestFactory().get("")
+        response = Network.as_view()(request, filter="all")
+        self.assertIn("user_list", response.context_data)
+        users = response.context_data["user_list"]
+        self.assertIn(user1, users)
+        self.assertIn(user2, users)
+
+    def test_returns_only_followers_if_filter_is_followers(self):
+        """
+        Tests that returns only the user's followers if filter is followers.
+        """
+        user1 = UserFactory()
+        user2 = UserFactory()
+        user3 = UserFactory()
+        user1.follow(user2)
+        request = RequestFactory().get("")
+        request.user = user1
+        response = Network.as_view()(request, filter="followers")
+        self.assertIn("user_list", response.context_data)
+        users = response.context_data["user_list"]
+        self.assertNotIn(user1, users)
+        self.assertIn(user2, users)
+        self.assertNotIn(user3, users)
+
+    def test_returns_only_followees_if_filter_is_followees(self):
+        """
+        Tests that returns only the user's followees if filter is followees.
+        """
+        user1 = UserFactory()
+        user2 = UserFactory()
+        user3 = UserFactory()
+        user2.follow(user1)
+        request = RequestFactory().get("")
+        request.user = user1
+        response = Network.as_view()(request, filter="followees")
+        self.assertIn("user_list", response.context_data)
+        users = response.context_data["user_list"]
+        self.assertNotIn(user1, users)
+        self.assertIn(user2, users)
+        self.assertNotIn(user3, users)
+
+    def test_unauthenticated_users_are_redirected_to_login_page_if_filer_is_followers(
+        self,
+    ):
+        """
+        Tests that unauthenticated users are redirected to login page if
+        filter is followers.
+        """
+        user1 = UserFactory()
+        user2 = UserFactory()
+        user3 = UserFactory()
+        user1.follow(user2)
+        request = RequestFactory().get("")
+        request.user = AnonymousUser()
+        response = Network.as_view()(request, filter="followers")
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse("users:login"))
+
+    def test_unauthenticated_users_are_redirected_to_login_page_if_filer_is_followees(
+        self,
+    ):
+        """
+        Tests that unauthenticated users are redirected to login page if
+        filter is followees.
+        """
+        user1 = UserFactory()
+        user2 = UserFactory()
+        user3 = UserFactory()
+        user2.follow(user1)
+        request = RequestFactory().get("")
+        request.user = AnonymousUser()
+        response = Network.as_view()(request, filter="followees")
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, reverse("users:login"))
+
+    def test_returns_filter_in_context_data(self):
+        """
+        Tests that view returns filter in context data.
+        """
+        request = RequestFactory().get("")
+        response = Network.as_view()(request, filter="all")
+        self.assertIn("filter", response.context_data)

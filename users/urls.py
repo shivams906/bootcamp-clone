@@ -14,5 +14,5 @@ urlpatterns = [
     path("<uuid:pk>/", Profile.as_view(), name="profile"),
     path("<uuid:pk>/follow", Follow.as_view(), name="follow"),
     path("<uuid:pk>/unfollow", Unfollow.as_view(), name="unfollow"),
-    path("network/", Network.as_view(), name="network"),
+    path("network/<str:filter>/", Network.as_view(), name="network"),
 ]

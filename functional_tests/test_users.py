@@ -7,7 +7,7 @@ from users.models import User
 from .base import fake, FunctionalTest, wait_for, webdriver
 
 
-class SignupLoginLogoutTestCase(FunctionalTest):
+class UserTest(FunctionalTest):
     """
     Tests for account related functions like signup, login and logout.
     """
@@ -123,24 +123,38 @@ class SignupLoginLogoutTestCase(FunctionalTest):
         wait_for(lambda: self.browser.find_element_by_link_text("unfollow"))
 
         # She goes to the network page.
-        self.browser.get(self.live_server_url + reverse("users:network"))
+        self.browser.get(self.live_server_url + reverse("users:network", args=["all"]))
 
-        # She sees meredith's name in the followees' list
-        followees_list = wait_for(
-            lambda: self.browser.find_element_by_id("followees_list")
+        # She clicks on followees' link.
+        wait_for(lambda: self.browser.find_element_by_link_text("Followees")).click()
+
+        # She sees meredith's name in the users' list
+        wait_for(
+            lambda: self.assertEqual(
+                self.browser.current_url,
+                self.live_server_url + reverse("users:network", args=["followees"]),
+            )
         )
-        self.assertIn("Meredith", followees_list.text)
+        user_list = wait_for(lambda: self.browser.find_element_by_id("user_list"))
+        self.assertIn("Meredith", user_list.text)
 
         # Meredith goes to network page in her browser.
         edith_browser = self.browser
         self.browser = meredith_browser
-        self.browser.get(self.live_server_url + reverse("users:network"))
+        self.browser.get(self.live_server_url + reverse("users:network", args=["all"]))
 
-        # She sees Edith's name in followers' list
-        followers_list = wait_for(
-            lambda: self.browser.find_element_by_id("followers_list")
+        # She clicks on followers' link.
+        wait_for(lambda: self.browser.find_element_by_link_text("Followers")).click()
+
+        # She sees Edith's name in users' list
+        wait_for(
+            lambda: self.assertEqual(
+                self.browser.current_url,
+                self.live_server_url + reverse("users:network", args=["followers"]),
+            )
         )
-        self.assertIn("Edith", followers_list.text)
+        user_list = wait_for(lambda: self.browser.find_element_by_id("user_list"))
+        self.assertIn("Edith", user_list.text)
 
         # Edith goes to Meredith's profile page.
         meredith_browser = self.browser
@@ -159,23 +173,37 @@ class SignupLoginLogoutTestCase(FunctionalTest):
         wait_for(lambda: self.browser.find_element_by_link_text("follow"))
 
         # She goes to the network page.
-        self.browser.get(self.live_server_url + reverse("users:network"))
+        self.browser.get(self.live_server_url + reverse("users:network", args=["all"]))
 
-        # She does not see meredith's name in the followees' list
-        followees_list = wait_for(
-            lambda: self.browser.find_element_by_id("followees_list")
+        # She clicks on followees' link.
+        wait_for(lambda: self.browser.find_element_by_link_text("Followees")).click()
+
+        # She does not see meredith's name in the users' list
+        wait_for(
+            lambda: self.assertEqual(
+                self.browser.current_url,
+                self.live_server_url + reverse("users:network", args=["followees"]),
+            )
         )
-        self.assertNotIn("Meredith", followees_list.text)
+        user_list = wait_for(lambda: self.browser.find_element_by_id("user_list"))
+        self.assertNotIn("Meredith", user_list.text)
 
         # Meredith goes to network page in her browser.
         edith_browser = self.browser
         self.browser = meredith_browser
-        self.browser.get(self.live_server_url + reverse("users:network"))
+        self.browser.get(self.live_server_url + reverse("users:network", args=["all"]))
 
-        # She does not see Edith's name in followers' list
-        followers_list = wait_for(
-            lambda: self.browser.find_element_by_id("followers_list")
+        # She clicks on followers' link.
+        wait_for(lambda: self.browser.find_element_by_link_text("Followers")).click()
+
+        # She does not see Edith's name in users' list
+        wait_for(
+            lambda: self.assertEqual(
+                self.browser.current_url,
+                self.live_server_url + reverse("users:network", args=["followers"]),
+            )
         )
-        self.assertNotIn("Edith", followers_list.text)
+        user_list = wait_for(lambda: self.browser.find_element_by_id("user_list"))
+        self.assertNotIn("Edith", user_list.text)
 
         edith_browser.quit()

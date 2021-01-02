@@ -61,3 +61,21 @@ class Network(generic.ListView):
     queryset = User.objects.all()
     template_name = "users/network.html"
     paginate_by = 10
+
+    def dispatch(self, request, *args, **kwargs):
+        if kwargs["filter"] != "all" and request.user.is_anonymous:
+            return redirect(reverse("users:login"))
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        users = User.objects.all()
+        if self.kwargs["filter"] == "followers":
+            users = users.filter(id__in=self.request.user.followers.all())
+        if self.kwargs["filter"] == "followees":
+            users = users.filter(id__in=self.request.user.followees.all())
+        return users
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super().get_context_data(*args, **kwargs)
+        context_data["filter"] = self.kwargs["filter"]
+        return context_data
