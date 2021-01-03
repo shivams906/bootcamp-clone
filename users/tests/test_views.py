@@ -1,14 +1,16 @@
 """
 Contains tests for views defined in users app.
 """
+from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
+from django.core.exceptions import PermissionDenied
 from django.test import RequestFactory, TestCase
 from django.urls import reverse
 from faker import Faker
 from users.factories import UserFactory
 from users.forms import UserCreationForm
 from users.models import Followership, User
-from users.views import Follow, Network, Profile, SignUp, Unfollow
+from users.views import Follow, Login, Network, Profile, SignUp, Unfollow
 
 fake = Faker()
 
@@ -23,6 +25,7 @@ class SignUpTestCase(TestCase):
         Tests that GET request returns a blank signup form.
         """
         request = RequestFactory().get("")
+        request.user = AnonymousUser()
         response = SignUp.as_view()(request)
         self.assertIn("form", response.context_data)
         form = response.context_data["form"]
@@ -41,6 +44,7 @@ class SignUpTestCase(TestCase):
                 "password": fake.password(),
             },
         )
+        request.user = AnonymousUser()
         SignUp.as_view()(request)
         self.assertEqual(User.objects.count(), 1)
 
@@ -56,6 +60,7 @@ class SignUpTestCase(TestCase):
                 "password": fake.password(),
             },
         )
+        request.user = AnonymousUser()
         response = SignUp.as_view()(request)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, reverse("users:login"))
@@ -72,12 +77,41 @@ class SignUpTestCase(TestCase):
                 "password": "test",
             },
         )
+        request.user = AnonymousUser()
         response = SignUp.as_view()(request)
         self.assertIn("form", response.context_data)
         form = response.context_data["form"]
         self.assertIsInstance(form, UserCreationForm)
         self.assertTrue(form.is_bound)
         self.assertNotEqual(len(form.errors), 0)
+
+    def test_authenticated_users_are_redirected_to_login_redirect_url(self):
+        """
+        Tests that authenticated users are redirected to login redirect url.
+        """
+        user = UserFactory()
+        request = RequestFactory().get("")
+        request.user = user
+        response = SignUp.as_view()(request)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, settings.LOGIN_REDIRECT_URL)
+
+
+class LoginTestCase(TestCase):
+    """
+    Test class for Login view.
+    """
+
+    def test_authenticated_users_are_redirected_to_login_redirect_url(self):
+        """
+        Tests that authenticated users are redirected to login redirect url.
+        """
+        user = UserFactory()
+        request = RequestFactory().get("")
+        request.user = user
+        response = Login.as_view()(request)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, settings.LOGIN_REDIRECT_URL)
 
 
 class ProfileTestCase(TestCase):
@@ -248,9 +282,9 @@ class NetworkTestCase(TestCase):
         request.user = AnonymousUser()
         response = Network.as_view()(request, filter="followers")
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, reverse("users:login"))
+        self.assertIn(reverse("users:login"), response.url)
 
-    def test_unauthenticated_users_are_redirected_to_login_page_if_filer_is_followees(
+    def test_unauthenticated_users_are_redirected_to_login_page_if_filter_is_followees(
         self,
     ):
         """
@@ -265,7 +299,7 @@ class NetworkTestCase(TestCase):
         request.user = AnonymousUser()
         response = Network.as_view()(request, filter="followees")
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, reverse("users:login"))
+        self.assertIn(reverse("users:login"), response.url)
 
     def test_returns_filter_in_context_data(self):
         """

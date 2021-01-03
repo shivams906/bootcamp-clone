@@ -6,7 +6,7 @@
 <a href="{% url 'articles:create' %}">Create a new article</a>
 <a href="{% url 'articles:drafts' %}">My drafts</a>
 {% else %}
-<a href="{% url 'users:login' %}">Login</a> to add an article
+<a href="{% url 'users:login' %}?next={{ request.get_full_path}}">Login</a> to add an article
 {% endif %}
 {% if article_list %}
 <ul id="article_list">

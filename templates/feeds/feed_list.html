@@ -19,7 +19,7 @@
   <small id="count"></small>
 </form>
 {% else %}
-<a href="{% url 'users:login' %}">Login</a> to post a feed
+<a href="{% url 'users:login' %}?next={{ request.get_full_path}}">Login</a> to post a feed
 {% endif %}
 {% if feed_list %}
 <div class="feed_list">

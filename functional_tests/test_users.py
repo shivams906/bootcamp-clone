@@ -56,8 +56,8 @@ class UserTest(FunctionalTest):
 
         # She clicks on log in link
         self.browser.find_element_by_link_text("Login").click()
-        self.assertEqual(
-            self.browser.current_url, self.live_server_url + reverse("users:login")
+        self.assertIn(
+            self.live_server_url + reverse("users:login"), self.browser.current_url
         )
 
         # She fill in her details
