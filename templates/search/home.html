@@ -14,9 +14,7 @@
     <a href="{% url 'search:home' 'polls' %}?q={{request.GET.q}}">Polls</a>
     <a href="{% url 'search:home' 'users' %}?q={{request.GET.q}}">Users</a>
     <h2 id="results_category">
-        {% if category %}
         {{ category }}
-        {% endif %}
     </h2>
     <ul id="result_list">
         {% for result in results %}

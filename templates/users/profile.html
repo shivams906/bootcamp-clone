@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load humanize %}
 
 {% block main %}
 <h2>{{ user }}</h2>
@@ -13,11 +14,21 @@
     <caption>A count of all the activities of {{ user }}.</caption>
     <thead>
         <tr>
-            <th scope="col">Feeds</th>
-            <th scope="col">Articles</th>
-            <th scope="col">Questions</th>
-            <th scope="col">Answers</th>
-            <th scope="col">polls</th>
+            <th scope="col">
+                <a href="{% url 'users:profile' user.pk 'feeds' %}">Feeds</a>
+            </th>
+            <th scope="col">
+                <a href="{% url 'users:profile' user.pk 'articles' %}">Articles</a>
+            </th>
+            <th scope="col">
+                <a href="{% url 'users:profile' user.pk 'questions' %}">Questions</a>
+            </th>
+            <th scope="col">
+                <a href="{% url 'users:profile' user.pk 'answers' %}">Answers</a>
+            </th>
+            <th scope="col">
+                <a href="{% url 'users:profile' user.pk 'polls' %}">Polls</a>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -30,44 +41,54 @@
         </tr>
     </tbody>
 </table>
-<h3>Feeds</h3>
-{% if user.feeds %}
+<h2>
+    {{ category }}
+</h2>
+<h4>
+    {% if request.user == user and category == 'articles' %}
+    view your <a href="{% url 'articles:drafts' %}">drafts</a>
+    {% endif %}
+</h4>
+{% if posts %}
 <ul>
-    {% for feed in user.feeds.all %}
-    <li>{{ feed|linebreaksbr }}</li>
+    {% for post in posts %}
+    <li>
+        {% if category == 'feeds' %}
+        {{ post }}
+        {% elif category == 'answers' %}
+        Answered "{{ post }}"
+        <br>
+        to
+        <br>
+        <a href="{{ post.question.get_absolute_url }}">{{ post.question }}</a>
+        {% else %}
+        <a href="{{ post.get_absolute_url }}">{{ post }}</a>
+        {% endif %}
+        {{ post.created_at|naturaltime }}
+    </li>
     {% endfor %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a
+                href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+    
+            {% if page_obj.has_next %}
+            <a
+                href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last
+                &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
 </ul>
-{% endif %}
-<h3>Articles</h3>
-{% if user.articles %}
-<ul>
-    {% for article in user.articles.all %}
-    <li><a href="{{ article.get_absolute_url }}">{{ article }}</a></li>
-    {% endfor %}
-</ul>
-{% endif %}
-<h3>Questions (asked)</h3>
-{% if user.questions %}
-<ul>
-    {% for question in user.questions.all %}
-    <li><a href="{{ question.get_absolute_url }}">{{ question }}</a></li>
-    {% endfor %}
-</ul>
-{% endif %}
-<h3>Questions (answered)</h3>
-{% if user.answers %}
-<ul>
-    {% for answer in user.answers.all %}
-    <li><a href="{{ answer.question.get_absolute_url }}">{{ answer.question }}</a></li>
-    {% endfor %}
-</ul>
-{% endif %}
-<h3>Polls</h3>
-{% if user.polls %}
-<ul>
-    {% for poll in user.polls.all %}
-    <li><a href="{{ poll.get_absolute_url }}">{{ poll }}</a></li>
-    {% endfor %}
-</ul>
+{% else %}
+<strong>No {{ category }}</strong>
 {% endif %}
 {% endblock %}

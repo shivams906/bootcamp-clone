@@ -233,13 +233,17 @@ class DraftListTestCase(TestCase):
         """
         Tests that view returns list of drafts for the current logged-in user.
         """
-        article = ArticleFactory()
+        user = UserFactory()
+        article1 = ArticleFactory(author=user)
+        article2 = ArticleFactory(author=user)
+        article2.publish()
         requset = RequestFactory().get("")
-        requset.user = article.author
+        requset.user = user
         response = DraftList.as_view()(requset)
         self.assertIn("article_list", response.context_data)
         articles = response.context_data["article_list"]
-        self.assertIn(article, articles)
+        self.assertIn(article1, articles)
+        self.assertNotIn(article2, articles)
 
     def test_unauthenticated_users_are_redirected_to_login_page(self):
         """

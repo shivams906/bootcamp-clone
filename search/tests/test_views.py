@@ -19,6 +19,7 @@ class SearchTestCase(TestCase):
         queryset is returned.
         """
         article = ArticleFactory()
+        article.publish()
         request = RequestFactory().get("", {})
         response = Search.as_view()(request)
         self.assertIn("results", response.context_data)
@@ -30,6 +31,7 @@ class SearchTestCase(TestCase):
         Tests that if the query term is empty an empty queryset is returned.
         """
         article = ArticleFactory()
+        article.publish()
         request = RequestFactory().get("", {"q": ""})
         response = Search.as_view()(request)
         self.assertIn("results", response.context_data)
@@ -41,6 +43,7 @@ class SearchTestCase(TestCase):
         Tests that if the category is not provided search uses default category.
         """
         article = ArticleFactory(title="same title")
+        article.publish()
         feed = FeedFactory(text="same text")
         request = RequestFactory().get("", {"q": "same"})
         response = Search.as_view()(request)
@@ -55,6 +58,7 @@ class SearchTestCase(TestCase):
         Tests that if the category is empty search uses default category.
         """
         article = ArticleFactory(title="same title")
+        article.publish()
         feed = FeedFactory(text="same text")
         request = RequestFactory().get("", {"q": "same", "category": ""})
         response = Search.as_view()(request, category="")
@@ -69,9 +73,25 @@ class SearchTestCase(TestCase):
         Tests that valid values for search query and category returns results.
         """
         article = ArticleFactory()
+        article.publish()
         request = RequestFactory().get("", {"q": article.title[:10]})
         response = Search.as_view()(request, category="articles")
         self.assertIn("results", response.context_data)
         results = response.context_data["results"]
         self.assertEqual(len(results), 1)
         self.assertIn(article, results)
+
+    def test_article_search_returns_only_published_articles(self):
+        """
+        Tests that if articles are searched only published articles are returned.
+        """
+        article1 = ArticleFactory(title="same")
+        article1.publish()
+        article2 = ArticleFactory(title="same")
+        request = RequestFactory().get("", {"q": "same"})
+        response = Search.as_view()(request, category="articles")
+        self.assertIn("results", response.context_data)
+        results = response.context_data["results"]
+        self.assertEqual(len(results), 1)
+        self.assertIn(article1, results)
+        self.assertNotIn(article2, results)

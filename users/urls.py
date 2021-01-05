@@ -8,6 +8,7 @@ urlpatterns = [
     path("login/", Login.as_view(), name="login"),
     path("logout/", views.LogoutView.as_view(), name="logout"),
     path("<uuid:pk>/", Profile.as_view(), name="profile"),
+    path("<uuid:pk>/<str:category>/", Profile.as_view(), name="profile"),
     path("<uuid:pk>/follow", Follow.as_view(), name="follow"),
     path("<uuid:pk>/unfollow", Unfollow.as_view(), name="unfollow"),
     path("network/<str:filter>/", Network.as_view(), name="network"),

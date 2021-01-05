@@ -38,7 +38,9 @@ class Search(generic.ListView):
                 if category == "feeds" or category == "":
                     results = Feed.objects.filter(text__icontains=search_query)
                 elif category == "articles":
-                    results = Article.objects.filter(title__icontains=search_query)
+                    results = Article.objects.filter(
+                        title__icontains=search_query
+                    ).exclude(published_at=None)
                 elif category == "questions":
                     results = Question.objects.filter(title__icontains=search_query)
                 elif category == "polls":

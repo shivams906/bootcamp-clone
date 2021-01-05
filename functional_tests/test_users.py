@@ -2,6 +2,8 @@
 Functional tests for signup, login and logout (and other account functions).
 """
 from django.urls import reverse
+from articles.factories import ArticleFactory
+from feeds.factories import FeedFactory
 from users.factories import UserFactory
 from users.models import User
 from .base import fake, FunctionalTest, wait_for, webdriver
@@ -207,3 +209,36 @@ class UserTest(FunctionalTest):
         self.assertNotIn("Edith", user_list.text)
 
         edith_browser.quit()
+
+    def test_can_view_user_posts_on_their_profile_page(self):
+        """
+        Tests that a user's posts can be viewed on their profile page.
+        """
+        # Edith logs in and goes to her profile.
+        self.login("Edith")
+        user = UserFactory()
+        feed = FeedFactory(author=user, text=fake.sentence())
+        article = ArticleFactory(author=user, title=fake.sentence())
+        article.publish()
+        self.browser.get(self.live_server_url + user.get_absolute_url())
+
+        # She sees her feeds listed below.
+        main_content = wait_for(lambda: self.browser.find_element_by_tag_name("main"))
+        self.assertIn(feed.text, main_content.text)
+
+        # She sees a link for her articles and clicks on it.
+        main_content.find_element_by_link_text("Articles").click()
+
+        # Her articles are shown below.
+        wait_for(
+            lambda: self.assertEqual(
+                self.browser.current_url,
+                self.live_server_url
+                + reverse(
+                    "users:profile", kwargs={"category": "articles", "pk": user.pk}
+                ),
+            )
+        )
+        main_content = wait_for(lambda: self.browser.find_element_by_tag_name("main"))
+        self.assertNotIn(feed.text, main_content.text)
+        self.assertIn(article.title, main_content.text)

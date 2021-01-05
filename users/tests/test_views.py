@@ -7,6 +7,8 @@ from django.core.exceptions import PermissionDenied
 from django.test import RequestFactory, TestCase
 from django.urls import reverse
 from faker import Faker
+from articles.factories import ArticleFactory
+from feeds.factories import FeedFactory
 from users.factories import UserFactory
 from users.forms import UserCreationForm
 from users.models import Followership, User
@@ -128,6 +130,94 @@ class ProfileTestCase(TestCase):
         response = Profile.as_view()(request, pk=user.pk)
         self.assertIn("user", response.context_data)
         self.assertEqual(response.context_data["user"], user)
+
+    def test_GET_returns_posts_made_by_user(self):
+        """
+        Tests that GET returns posts made by user.
+        """
+        user = UserFactory()
+        request = RequestFactory().get("")
+        response = Profile.as_view()(request, pk=user.pk)
+        self.assertIn("posts", response.context_data)
+
+    def test_no_value_for_category_field_returns_posts_of_default_category(self):
+        """
+        Tests that if the category is not provided posts of default category
+        are returned.
+        """
+        user = UserFactory()
+        article = ArticleFactory(author=user)
+        article.publish()
+        feed = FeedFactory(author=user)
+        request = RequestFactory().get("")
+        response = Profile.as_view()(request, pk=user.pk)
+        self.assertIn("posts", response.context_data)
+        posts = response.context_data["posts"]
+        self.assertEqual(len(posts), 1)
+        self.assertNotIn(article, posts)
+        self.assertIn(feed, posts)
+
+    def test_empty_value_for_category_field_returns_posts_of_default_category(self):
+        """
+        Tests that if the category is empty posts of default category are returned.
+        """
+        user = UserFactory()
+        article = ArticleFactory(author=user)
+        article.publish()
+        feed = FeedFactory(author=user)
+        request = RequestFactory().get("")
+        response = Profile.as_view()(request, pk=user.pk, category="")
+        self.assertIn("posts", response.context_data)
+        posts = response.context_data["posts"]
+        self.assertEqual(len(posts), 1)
+        self.assertNotIn(article, posts)
+        self.assertIn(feed, posts)
+
+    def test_valid_value_for_category_field_returns_posts_of_that_category(self):
+        """
+        Tests that if valid category is provided posts of that category are returned.
+        """
+        user = UserFactory()
+        article = ArticleFactory(author=user)
+        article.publish()
+        feed = FeedFactory(author=user)
+        request = RequestFactory().get("")
+        response = Profile.as_view()(request, pk=user.pk, category="articles")
+        self.assertIn("posts", response.context_data)
+        posts = response.context_data["posts"]
+        self.assertEqual(len(posts), 1)
+        self.assertIn(article, posts)
+        self.assertNotIn(feed, posts)
+
+    def test_invalid_value_for_category_field_returns_empty_queryset(self):
+        """
+        Tests that if invalid category is provided empty queryset is returned.
+        """
+        user = UserFactory()
+        article = ArticleFactory(author=user)
+        article.publish()
+        feed = FeedFactory(author=user)
+        request = RequestFactory().get("")
+        response = Profile.as_view()(request, pk=user.pk, category="invalid")
+        self.assertIn("posts", response.context_data)
+        posts = response.context_data["posts"]
+        self.assertEqual(len(posts), 0)
+
+    def test_articles_category_returns_only_published_articles(self):
+        """
+        Tests that if category is articles only published articles are returned.
+        """
+        user = UserFactory()
+        article1 = ArticleFactory(author=user)
+        article1.publish()
+        article2 = ArticleFactory(author=user)
+        request = RequestFactory().get("")
+        response = Profile.as_view()(request, pk=user.pk, category="articles")
+        self.assertIn("posts", response.context_data)
+        posts = response.context_data["posts"]
+        self.assertEqual(len(posts), 1)
+        self.assertIn(article1, posts)
+        self.assertNotIn(article2, posts)
 
 
 class FollowTestCase(TestCase):

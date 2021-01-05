@@ -8,6 +8,10 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.views import generic, View
+from articles.models import Article
+from feeds.models import Feed
+from polls.models import Question as Poll
+from questions.models import Question, Answer
 from users.forms import UserCreationForm
 from users.models import User
 
@@ -43,13 +47,44 @@ class Login(LoginView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class Profile(generic.DetailView):
+class Profile(generic.ListView):
     """
     View class for user profile.
     """
 
-    queryset = User.objects.all()
     template_name = "users/profile.html"
+    context_object_name = "posts"
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        user = get_object_or_404(User, pk=self.kwargs["pk"])
+        context_data["user"] = user
+        if "category" in self.kwargs:
+            context_data["category"] = self.kwargs["category"]
+        else:
+            context_data["category"] = "feeds"
+        return context_data
+
+    def get_queryset(self):
+        user = get_object_or_404(User, pk=self.kwargs["pk"])
+        if "category" in self.kwargs:
+            category = self.kwargs["category"]
+            if category == "feeds" or category == "":
+                posts = Feed.objects.filter(author=user)
+            elif category == "articles":
+                posts = Article.objects.filter(author=user).exclude(published_at=None)
+            elif category == "questions":
+                posts = Question.objects.filter(author=user)
+            elif category == "answers":
+                posts = Answer.objects.filter(author=user)
+            elif category == "polls":
+                posts = Poll.objects.filter(author=user)
+            else:
+                posts = []
+        else:
+            posts = Feed.objects.filter(author=user)
+        return posts
 
 
 class Follow(LoginRequiredMixin, View):
