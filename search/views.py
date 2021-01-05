@@ -20,27 +20,33 @@ class Search(generic.ListView):
     context_object_name = "results"
     paginate_by = 10
 
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        if "category" in self.kwargs:
+            context_data["category"] = self.kwargs["category"]
+        else:
+            context_data["category"] = "feeds"
+        return context_data
+
     def get_queryset(self):
         search_query = self.request.GET.get("q")
-        category = self.request.GET.get("category")
-        if (
-            search_query is None
-            or search_query == ""
-            or category is None
-            or category == ""
-        ):
+        if not search_query:
             results = []
         else:
-            if category == "feeds":
-                results = Feed.objects.filter(text__icontains=search_query)
-            elif category == "articles":
-                results = Article.objects.filter(title__icontains=search_query)
-            elif category == "questions":
-                results = Question.objects.filter(title__icontains=search_query)
-            elif category == "polls":
-                results = Poll.objects.filter(question_text__icontains=search_query)
-            elif category == "users":
-                results = User.objects.filter(name__icontains=search_query)
+            if "category" in self.kwargs:
+                category = self.kwargs["category"]
+                if category == "feeds" or category == "":
+                    results = Feed.objects.filter(text__icontains=search_query)
+                elif category == "articles":
+                    results = Article.objects.filter(title__icontains=search_query)
+                elif category == "questions":
+                    results = Question.objects.filter(title__icontains=search_query)
+                elif category == "polls":
+                    results = Poll.objects.filter(question_text__icontains=search_query)
+                elif category == "users":
+                    results = User.objects.filter(name__icontains=search_query)
+                else:
+                    results = []
             else:
-                results = []
+                results = Feed.objects.filter(text__icontains=search_query)
         return results

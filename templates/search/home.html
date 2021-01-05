@@ -2,55 +2,59 @@
 {% load humanize %}
 
 {% block main %}
-<form action="{% url 'search:home' %}" method="get" name="search_form">
-    <input type="text" name="q">
-    <select name="category" id="category">
-        <option value="feeds">Feeds</option>
-        <option value="articles">Articles</option>
-        <option value="questions">Questions</option>
-        <option value="polls">Polls</option>
-        <option value="users">Users</option>
-    </select>
+<form method="get" name="search_form">
+    <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Enter a search term">
     <input type="submit" value="Search">
 </form>
-{% if results %}
-<h2>Results for '{{ request.GET.q }}' in {{ request.GET.category }}</h2>
-<ul id="result_list">
-    {% for result in results %}
-    <li id="result_item">
-        {% if request.GET.category != 'feeds' %}
-        <a href="{{ result.get_absolute_url }}">{{ result }}</a>
-        {% else %}
-        {{ result }}
+{% if 'q' in request.GET %}
+<div id="results">
+    <a href="{% url 'search:home' 'feeds' %}?q={{request.GET.q}}">Feeds</a>
+    <a href="{% url 'search:home' 'articles' %}?q={{request.GET.q}}">Articles</a>
+    <a href="{% url 'search:home' 'questions' %}?q={{request.GET.q}}">Questions</a>
+    <a href="{% url 'search:home' 'polls' %}?q={{request.GET.q}}">Polls</a>
+    <a href="{% url 'search:home' 'users' %}?q={{request.GET.q}}">Users</a>
+    <h2 id="results_category">
+        {% if category %}
+        {{ category }}
         {% endif %}
-        {% if request.GET.category != 'users' %}
-        by <a href="{{ result.author.get_absolute_url }}">{{ result.author }}</a>
-        {{ result.created_at|naturaltime }}
-        {% endif %}
-    </li>
-    {% endfor %}
-</ul>
-<div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-        <a href="?q={{ request.GET.q }}&category={{ request.GET.category }}&page=1">&laquo; first</a>
-        <a
-            href="?q={{ request.GET.q }}&category={{ request.GET.category }}&page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
-
-        <span class="current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+    </h2>
+    <ul id="result_list">
+        {% for result in results %}
+        <li class="result_item">
+            {% if category != 'feeds' %}
+            <a href="{{ result.get_absolute_url }}">{{ result }}</a>
+            {% else %}
+            {{ result }}
+            {% endif %}
+            {% if category != 'users' %}
+            by <a href="{{ result.author.get_absolute_url }}">{{ result.author }}</a>
+            {{ result.created_at|naturaltime }}
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+            <a href="?q={{ request.GET.q }}&page=1">&laquo; first</a>
+            <a
+                href="?q={{ request.GET.q }}&page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+    
+            {% if page_obj.has_next %}
+            <a
+                href="?q={{ request.GET.q }}&page={{ page_obj.next_page_number }}">next</a>
+            <a href="?q={{ request.GET.q }}&page={{ page_obj.paginator.num_pages }}">last
+                &raquo;</a>
+            {% endif %}
         </span>
-
-        {% if page_obj.has_next %}
-        <a
-            href="?q={{ request.GET.q }}&category={{ request.GET.category }}&page={{ page_obj.next_page_number }}">next</a>
-        <a href="?q={{ request.GET.q }}&category={{ request.GET.category }}&page={{ page_obj.paginator.num_pages }}">last
-            &raquo;</a>
-        {% endif %}
-    </span>
+    </div>
 </div>
 {% else %}
-<strong>No results found.</strong>
+Enter a search term.
 {% endif %}
 {% endblock %}
