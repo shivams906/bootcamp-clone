@@ -20,7 +20,10 @@ body {
 header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   height: 50px;
+  border-bottom: 1px solid black;
+  margin-bottom: 20px;
 }
 
 header > div.left .home {
