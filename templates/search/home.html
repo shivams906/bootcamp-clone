@@ -6,7 +6,7 @@
     <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Enter a search term">
     <input type="submit" value="Search">
 </form>
-{% if 'q' in request.GET %}
+{% if 'q' in request.GET and request.GET.q != '' %}
 <div id="results">
     <a href="{% url 'search:home' 'feeds' %}?q={{request.GET.q}}">Feeds</a>
     <a href="{% url 'search:home' 'articles' %}?q={{request.GET.q}}">Articles</a>
