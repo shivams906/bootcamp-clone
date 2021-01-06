@@ -12,9 +12,9 @@
 <ul id="article_list">
   {% for article in article_list %}
   <li class="article_item">
-    <a href="{{ article.get_absolute_url }}">
-      <h4>{{ article.title }}</h4>
-    </a>
+    <h4>
+      <a href="{{ article.get_absolute_url }}">{{ article.title }}</a>
+    </h4>
     - by <a href="{{ article.author.get_absolute_url }}">{{ article.author }}</a>
     {{ article.created_at|naturaltime }}
   </li>
