@@ -11,6 +11,7 @@
     <a href="{% url 'search:home' 'feeds' %}?q={{request.GET.q}}">Feeds</a>
     <a href="{% url 'search:home' 'articles' %}?q={{request.GET.q}}">Articles</a>
     <a href="{% url 'search:home' 'questions' %}?q={{request.GET.q}}">Questions</a>
+    <a href="{% url 'search:home' 'answers' %}?q={{request.GET.q}}">Answers</a>
     <a href="{% url 'search:home' 'polls' %}?q={{request.GET.q}}">Polls</a>
     <a href="{% url 'search:home' 'users' %}?q={{request.GET.q}}">Users</a>
     <h2 id="results_category">
@@ -22,6 +23,8 @@
     {% include 'articles/_article_list.html' with articles=results %}
     {% elif category == 'questions' %}
     {% include 'questions/_question_list.html' with questions=results %}
+    {% elif category == 'answers' %}
+    {% include 'questions/_answer_list.html' with answers=results %}
     {% elif category == 'polls' %}
     {% include 'polls/_poll_list.html' with polls=results %}
     {% elif category == 'users' %}

@@ -6,7 +6,7 @@ from django.views import generic
 from articles.models import Article
 from feeds.models import Feed
 from polls.models import Question as Poll
-from questions.models import Question
+from questions.models import Answer, Question
 
 User = get_user_model()
 
@@ -43,6 +43,8 @@ class Search(generic.ListView):
                     ).exclude(published_at=None)
                 elif category == "questions":
                     results = Question.objects.filter(title__icontains=search_query)
+                elif category == "answers":
+                    results = Answer.objects.filter(text__icontains=search_query)
                 elif category == "polls":
                     results = Poll.objects.filter(question_text__icontains=search_query)
                 elif category == "users":
