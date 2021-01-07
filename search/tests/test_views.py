@@ -95,3 +95,18 @@ class SearchTestCase(TestCase):
         self.assertEqual(len(results), 1)
         self.assertIn(article1, results)
         self.assertNotIn(article2, results)
+
+    def test_results_are_of_the_requested_category_only(self):
+        """
+        Tests that results are of the requested category only.
+        """
+        article = ArticleFactory(title="same")
+        article.publish()
+        feed = FeedFactory(text="same")
+        request = RequestFactory().get("", {"q": "same"})
+        response = Search.as_view()(request, category="articles")
+        self.assertIn("results", response.context_data)
+        results = response.context_data["results"]
+        self.assertEqual(len(results), 1)
+        self.assertIn(article, results)
+        self.assertNotIn(feed, results)
