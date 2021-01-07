@@ -1,0 +1,14 @@
+{% load humanize %}
+
+<ul id="answer_list">
+    {% for answer in answers %}
+    <li class="answer_item">
+        Answered "{{ answer }}"
+        <br>
+        to
+        <br>
+        <a href="{{ answer.question.get_absolute_url }}">{{ answer.question }}</a>
+        {{ post.created_at|naturaltime }}
+    </li>
+    {% endfor %}
+</ul>

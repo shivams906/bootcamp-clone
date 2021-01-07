@@ -13,23 +13,17 @@
 {% elif filter == "followees" %}
 <h2>Followees</h2>
 {% endif %}
-<ul id="user_list">
-    {% if user_list %}
-    {% for user in user_list %}
-    <li>
-        <a href="{% url 'users:profile' user.pk %}">{{ user }}</a>
-    </li>
-    {% endfor %}
-    {% else %}
-    {% if filter == "all" %}
-    <strong>No Users</strong>
-    {% elif filter == "followers" %}
-    <strong>No Followers</strong>
-    {% elif filter == "followees" %}
-    <strong>No Followees</strong>
-    {% endif %}
-    {% endif %}
-</ul>
+{% if users %}
+{% include 'users/_user_list.html' with users=users %}
+{% else %}
+{% if filter == "all" %}
+<strong>No Users</strong>
+{% elif filter == "followers" %}
+<strong>No Followers</strong>
+{% elif filter == "followees" %}
+<strong>No Followees</strong>
+{% endif %}
+{% endif %}
 <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}

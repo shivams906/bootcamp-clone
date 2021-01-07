@@ -59,7 +59,7 @@ main li {
   padding: 10px;
 }
 
-.feed_list,
+#feed_list,
 #feed_form {
   max-width: 600px;
   margin: 0 auto;
@@ -79,7 +79,12 @@ main li {
 
 a {
   color: black;
+  text-decoration: none;
 }
+
+ a:hover {
+   text-decoration: underline;
+ }
 
 input[type="text"],
 input[type="password"],

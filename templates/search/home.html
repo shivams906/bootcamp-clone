@@ -16,36 +16,30 @@
     <h2 id="results_category">
         {{ category }}
     </h2>
-    <ul id="result_list">
-        {% for result in results %}
-        <li class="result_item">
-            {% if category != 'feeds' %}
-            <a href="{{ result.get_absolute_url }}">{{ result }}</a>
-            {% else %}
-            {{ result }}
-            {% endif %}
-            {% if category != 'users' %}
-            by <a href="{{ result.author.get_absolute_url }}">{{ result.author }}</a>
-            {{ result.created_at|naturaltime }}
-            {% endif %}
-        </li>
-        {% endfor %}
-    </ul>
+    {% if category == 'feeds' %}
+    {% include 'feeds/_feed_list.html' with feeds=results %}
+    {% elif category == 'articles' %}
+    {% include 'articles/_article_list.html' with articles=results %}
+    {% elif category == 'questions' %}
+    {% include 'questions/_question_list.html' with questions=results %}
+    {% elif category == 'polls' %}
+    {% include 'polls/_poll_list.html' with polls=results %}
+    {% elif category == 'users' %}
+    {% include 'users/_user_list.html' with users=results %}
+    {% endif %}
     <div class="pagination">
         <span class="step-links">
             {% if page_obj.has_previous %}
             <a href="?q={{ request.GET.q }}&page=1">&laquo; first</a>
-            <a
-                href="?q={{ request.GET.q }}&page={{ page_obj.previous_page_number }}">previous</a>
+            <a href="?q={{ request.GET.q }}&page={{ page_obj.previous_page_number }}">previous</a>
             {% endif %}
-    
+
             <span class="current">
                 Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
             </span>
-    
+
             {% if page_obj.has_next %}
-            <a
-                href="?q={{ request.GET.q }}&page={{ page_obj.next_page_number }}">next</a>
+            <a href="?q={{ request.GET.q }}&page={{ page_obj.next_page_number }}">next</a>
             <a href="?q={{ request.GET.q }}&page={{ page_obj.paginator.num_pages }}">last
                 &raquo;</a>
             {% endif %}

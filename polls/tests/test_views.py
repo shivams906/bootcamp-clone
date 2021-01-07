@@ -23,8 +23,8 @@ class PollListTestCase(TestCase):
         question2 = QuestionFactory()
         request = RequestFactory().get("")
         response = PollList.as_view()(request)
-        self.assertIn("question_list", response.context_data)
-        polls = response.context_data["question_list"]
+        self.assertIn("polls", response.context_data)
+        polls = response.context_data["polls"]
         self.assertIn(question1, polls)
         self.assertIn(question2, polls)
 

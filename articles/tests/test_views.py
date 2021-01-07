@@ -34,8 +34,8 @@ class ArticleListTestCase(TestCase):
         article2 = ArticleFactory()
         request = RequestFactory().get("")
         response = ArticleList.as_view()(request)
-        self.assertIn("article_list", response.context_data)
-        articles = response.context_data["article_list"]
+        self.assertIn("articles", response.context_data)
+        articles = response.context_data["articles"]
         self.assertIn(article1, articles)
         self.assertNotIn(article2, articles)
 
@@ -229,9 +229,9 @@ class DraftListTestCase(TestCase):
     Test class for DraftList.
     """
 
-    def test_returns_draft_of_logged_in_user(self):
+    def test_returns_drafts_only(self):
         """
-        Tests that view returns list of drafts for the current logged-in user.
+        Tests that view returns list of drafts only.
         """
         user = UserFactory()
         article1 = ArticleFactory(author=user)
@@ -240,8 +240,25 @@ class DraftListTestCase(TestCase):
         requset = RequestFactory().get("")
         requset.user = user
         response = DraftList.as_view()(requset)
-        self.assertIn("article_list", response.context_data)
-        articles = response.context_data["article_list"]
+        self.assertIn("articles", response.context_data)
+        articles = response.context_data["articles"]
+        self.assertIn(article1, articles)
+        self.assertNotIn(article2, articles)
+
+    def test_returns_drafts_of_logged_in_user_only(self):
+        """
+        Tests that view returns list of drafts of the current logged-in user
+        only.
+        """
+        user = UserFactory()
+        anotherUser = UserFactory()
+        article1 = ArticleFactory(author=user)
+        article2 = ArticleFactory(author=anotherUser)
+        request = RequestFactory().get("")
+        request.user = user
+        response = DraftList.as_view()(request)
+        self.assertIn("articles", response.context_data)
+        articles = response.context_data["articles"]
         self.assertIn(article1, articles)
         self.assertNotIn(article2, articles)
 

@@ -19,6 +19,7 @@ class PollList(generic.ListView):
     queryset = Question.objects.all()
     paginate_by = 10
     template_name = "polls/poll_list.html"
+    context_object_name = "polls"
 
 
 class PollCreate(LoginRequiredMixin, generic.CreateView):

@@ -1,0 +1,15 @@
+{% load humanize %}
+
+
+<ul id="question_list">
+    {% for question in questions %}
+    <li class="question_item">
+        <h4>
+            <a href="{{ question.get_absolute_url }}">{{ question }}</a>
+        </h4>
+        - by
+        <a href="{{ question.author.get_absolute_url }}">{{ question.author }}</a>
+        {{ question.created_at|naturaltime }}
+    </li>
+    {% endfor %}
+</ul>

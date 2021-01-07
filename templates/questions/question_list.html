@@ -7,19 +7,8 @@
 {% else %}
 <a href="{% url 'users:login' %}?next={{ request.get_full_path}}">Login</a> to ask a question
 {% endif %}
-{% if question_list %}
-<ul>
-    {% for question in question_list %}
-    <li>
-        <h4>
-            <a href="{{ question.get_absolute_url }}">{{ question }}</a>
-        </h4>
-        - by
-        <a href="{{ question.author.get_absolute_url }}">{{ question.author }}</a>
-        {{ question.created_at|naturaltime }}
-    </li>
-    {% endfor %}
-</ul>
+{% if questions %}
+{% include 'questions/_question_list.html' with questions=questions %}
 <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}

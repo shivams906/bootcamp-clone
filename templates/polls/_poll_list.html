@@ -1,0 +1,15 @@
+{% load humanize %}
+
+
+<ul id="poll_list">
+    {% for poll in polls %}
+    <li class="poll_item">
+        <h4>
+            <a href="{{ poll.get_absolute_url }}">{{ poll }}</a>
+        </h4>
+        - by
+        <a href="{{ poll.author.get_absolute_url }}">{{ poll.author }}</a>
+        {{ poll.created_at|naturaltime }}
+    </li>
+    {% endfor %}
+</ul>

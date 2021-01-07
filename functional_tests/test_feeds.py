@@ -30,9 +30,7 @@ class FeedTestCase(FunctionalTest):
         submit_button.click()
 
         # Her feed appears below the box.
-        feed_list = wait_for(
-            lambda: self.browser.find_element_by_class_name("feed_list")
-        )
+        feed_list = wait_for(lambda: self.browser.find_element_by_id("feed_list"))
         self.assertIn("hello", feed_list.text)
 
         # She creates another post.
@@ -42,9 +40,7 @@ class FeedTestCase(FunctionalTest):
         submit_button.click()
 
         # This one also appear below the box,
-        feed_list = wait_for(
-            lambda: self.browser.find_element_by_class_name("feed_list")
-        )
+        feed_list = wait_for(lambda: self.browser.find_element_by_id("feed_list"))
         self.assertIn("hello again", feed_list.text)
 
         # but above the previous one.

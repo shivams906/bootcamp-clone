@@ -50,44 +50,35 @@
     {% endif %}
 </h4>
 {% if posts %}
-<ul>
-    {% for post in posts %}
-    <li>
-        {% if category == 'feeds' %}
-        {{ post }}
-        {% elif category == 'answers' %}
-        Answered "{{ post }}"
-        <br>
-        to
-        <br>
-        <a href="{{ post.question.get_absolute_url }}">{{ post.question }}</a>
-        {% else %}
-        <a href="{{ post.get_absolute_url }}">{{ post }}</a>
+{% if category == 'feeds' %}
+{% include 'feeds/_feed_list.html' with feeds=posts %}
+{% elif category == 'articles' %}
+{% include 'articles/_article_list.html' with articles=posts %}
+{% elif category == 'questions' %}
+{% include 'questions/_question_list.html' with questions=posts %}
+{% elif category == 'answers' %}
+{% include 'questions/_answer_list.html' with answers=posts %}
+{% elif category == 'polls' %}
+{% include 'polls/_poll_list.html' with polls=posts %}
+{% endif %}
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo; first</a>
+        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
         {% endif %}
-        {{ post.created_at|naturaltime }}
-    </li>
-    {% endfor %}
-    <div class="pagination">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a
-                href="?page={{ page_obj.previous_page_number }}">previous</a>
-            {% endif %}
-    
-            <span class="current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-            </span>
-    
-            {% if page_obj.has_next %}
-            <a
-                href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last
-                &raquo;</a>
-            {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
         </span>
-    </div>
-</ul>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">last
+            &raquo;</a>
+        {% endif %}
+    </span>
+</div>
 {% else %}
 <strong>No {{ category }}</strong>
 {% endif %}

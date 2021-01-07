@@ -24,8 +24,8 @@ class QuestionListTestCase(TestCase):
         question2 = QuestionFactory()
         request = RequestFactory().get("")
         response = QuestionList.as_view()(request)
-        self.assertIn("question_list", response.context_data)
-        questions = response.context_data["question_list"]
+        self.assertIn("questions", response.context_data)
+        questions = response.context_data["questions"]
         self.assertIn(question1, questions)
         self.assertIn(question2, questions)
 

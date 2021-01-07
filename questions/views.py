@@ -15,6 +15,7 @@ class QuestionList(generic.ListView):
 
     queryset = Question.objects.all()
     paginate_by = 10
+    context_object_name = "questions"
 
 
 class QuestionCreate(LoginRequiredMixin, generic.CreateView):

@@ -28,8 +28,8 @@ class FeedListTestCase(TestCase):
         feed2 = FeedFactory()
         request = RequestFactory().get("")
         response = FeedList.as_view()(request)
-        self.assertIn("feed_list", response.context_data)
-        feeds = response.context_data["feed_list"]
+        self.assertIn("feeds", response.context_data)
+        feeds = response.context_data["feeds"]
         self.assertIn(feed1, feeds)
         self.assertIn(feed2, feeds)
 

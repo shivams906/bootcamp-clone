@@ -187,8 +187,9 @@ class UserTest(FunctionalTest):
                 self.live_server_url + reverse("users:network", args=["followees"]),
             )
         )
-        user_list = wait_for(lambda: self.browser.find_element_by_id("user_list"))
-        self.assertNotIn("Meredith", user_list.text)
+        main_content = wait_for(lambda: self.browser.find_element_by_tag_name("main"))
+        self.assertNotIn("Meredith", main_content.text)
+        self.assertIn("No Followees", main_content.text)
 
         # Meredith goes to network page in her browser.
         edith_browser = self.browser
@@ -205,8 +206,9 @@ class UserTest(FunctionalTest):
                 self.live_server_url + reverse("users:network", args=["followers"]),
             )
         )
-        user_list = wait_for(lambda: self.browser.find_element_by_id("user_list"))
-        self.assertNotIn("Edith", user_list.text)
+        main_content = wait_for(lambda: self.browser.find_element_by_tag_name("main"))
+        self.assertNotIn("Edith", main_content.text)
+        self.assertIn("No Followers", main_content.text)
 
         edith_browser.quit()
 

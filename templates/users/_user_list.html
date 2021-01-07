@@ -1,0 +1,7 @@
+<ul id="user_list">
+    {% for user in users %}
+    <li class="user_item">
+        <a href="{% url 'users:profile' user.pk %}">{{ user }}</a>
+    </li>
+    {% endfor %}
+</ul>

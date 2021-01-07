@@ -117,6 +117,7 @@ class Network(generic.ListView):
     queryset = User.objects.all()
     template_name = "users/network.html"
     paginate_by = 10
+    context_object_name = "users"
 
     def dispatch(self, request, *args, **kwargs):
         if kwargs["filter"] != "all" and request.user.is_anonymous:

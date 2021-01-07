@@ -1,0 +1,11 @@
+{% load humanize %}
+
+<div id="feed_list">
+    {% for feed in feeds %}
+    <div class="feed_item">
+        <a href="{{ feed.author.get_absolute_url }}">{{ feed.author }}</a> {{ feed.created_at|naturaltime }}:
+        <br>
+        <p>{{ feed.text|linebreaksbr }}</p>
+    </div>
+    {% endfor %}
+</div>

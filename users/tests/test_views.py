@@ -318,8 +318,8 @@ class NetworkTestCase(TestCase):
         user2 = UserFactory()
         request = RequestFactory().get("")
         response = Network.as_view()(request, filter="all")
-        self.assertIn("user_list", response.context_data)
-        users = response.context_data["user_list"]
+        self.assertIn("users", response.context_data)
+        users = response.context_data["users"]
         self.assertIn(user1, users)
         self.assertIn(user2, users)
 
@@ -334,8 +334,8 @@ class NetworkTestCase(TestCase):
         request = RequestFactory().get("")
         request.user = user1
         response = Network.as_view()(request, filter="followers")
-        self.assertIn("user_list", response.context_data)
-        users = response.context_data["user_list"]
+        self.assertIn("users", response.context_data)
+        users = response.context_data["users"]
         self.assertNotIn(user1, users)
         self.assertIn(user2, users)
         self.assertNotIn(user3, users)
@@ -351,8 +351,8 @@ class NetworkTestCase(TestCase):
         request = RequestFactory().get("")
         request.user = user1
         response = Network.as_view()(request, filter="followees")
-        self.assertIn("user_list", response.context_data)
-        users = response.context_data["user_list"]
+        self.assertIn("users", response.context_data)
+        users = response.context_data["users"]
         self.assertNotIn(user1, users)
         self.assertIn(user2, users)
         self.assertNotIn(user3, users)

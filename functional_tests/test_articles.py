@@ -103,7 +103,7 @@ class ArticleTest(FunctionalTest):
 
     def test_can_publish_drafts(self):
         """
-        Tests that use can publish saved drafts.
+        Tests that user can publish saved drafts.
         """
         # Edith logs in and goes to articles home page.
         self.login("Edith")
@@ -126,7 +126,7 @@ class ArticleTest(FunctionalTest):
         # She clicks on the first entry.
         draft_list = wait_for(lambda: self.browser.find_element_by_id("article_list"))
         drafts = draft_list.find_elements_by_class_name("article_item")
-        drafts[0].click()
+        drafts[0].find_element_by_tag_name("a").click()
 
         # She is taken to the article's detail page.
         wait_for(

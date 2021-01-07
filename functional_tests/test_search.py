@@ -57,8 +57,8 @@ class SearchTestCase(FunctionalTest):
         self.assertIn("articles", results_category.text)
 
         # She sees her article in the list and clicks on it.
-        result_list = results.find_element_by_id("result_list")
-        result_items = result_list.find_elements_by_class_name("result_item")
+        result_list = results.find_element_by_id("article_list")
+        result_items = result_list.find_elements_by_class_name("article_item")
         result_items[0].find_element_by_tag_name("a").click()
 
         # She is on her article's detail page.

@@ -16,6 +16,7 @@ class ArticleList(ListView):
 
     queryset = Article.objects.exclude(published_at=None)
     paginate_by = 10
+    context_object_name = "articles"
 
 
 class ArticleCreate(LoginRequiredMixin, CreateView):
@@ -70,5 +71,10 @@ class DraftList(LoginRequiredMixin, ListView):
     View class for logged-in user's drafts.
     """
 
-    queryset = Article.objects.filter(published_at=None)
     paginate_by = 10
+    context_object_name = "articles"
+
+    def get_queryset(self):
+        return Article.objects.filter(author=self.request.user).filter(
+            published_at=None
+        )
