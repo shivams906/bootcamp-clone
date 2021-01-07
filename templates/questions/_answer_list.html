@@ -2,13 +2,12 @@
 
 <ul id="answer_list">
     {% for answer in answers %}
-    <li class="answer_item">
-        Answered "{{ answer }}"
-        <br>
-        to
-        <br>
-        <a href="{{ answer.question.get_absolute_url }}">{{ answer.question }}</a>
-        {{ post.created_at|naturaltime }}
+    <li id="{{ answer.pk }}" class="answer_item">
+        <a href="{{ answer.author.get_absolute_url }}">{{ answer.author }}</a>
+        wrote {{ answer.created_at|naturaltime }}:
+        <p>
+            <a href="{% url 'questions:detail' answer.question.pk %}#{{ answer.pk }}">{{ answer.text|linebreaksbr }}</a>
+        </p>
     </li>
     {% endfor %}
 </ul>

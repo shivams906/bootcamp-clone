@@ -10,15 +10,7 @@
 <p>{{ question.description|linebreaksbr }}</p>
 <a href="{% url 'questions:answer' question.pk %}">Answer it</a>
 {% if question.answers %}
-<ul>
-    {% for answer in question.answers.all %}
-    <li>
-        <a href="{{ answer.author.get_absolute_url }}">{{ answer.author }}</a>
-        wrote {{ answer.created_at|naturaltime }}:
-        <p>{{ answer.text|linebreaksbr }}</p>
-    </li>
-    {% endfor %}
-</ul>
+{% include 'questions/_answer_list.html' with answers=question.answers.all %}
 {% endif %}
 {% endif %}
 {% endblock %}
