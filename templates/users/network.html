@@ -15,15 +15,6 @@
 {% endif %}
 {% if users %}
 {% include 'users/_user_list.html' with users=users %}
-{% else %}
-{% if filter == "all" %}
-<strong>No Users</strong>
-{% elif filter == "followers" %}
-<strong>No Followers</strong>
-{% elif filter == "followees" %}
-<strong>No Followees</strong>
-{% endif %}
-{% endif %}
 <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
@@ -41,4 +32,13 @@
         {% endif %}
     </span>
 </div>
+{% else %}
+{% if filter == "all" %}
+<strong>No Users</strong>
+{% elif filter == "followers" %}
+<strong>No Followers</strong>
+{% elif filter == "followees" %}
+<strong>No Followees</strong>
+{% endif %}
+{% endif %}
 {% endblock %}
