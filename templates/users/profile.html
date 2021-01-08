@@ -42,7 +42,7 @@
     </tbody>
 </table>
 <h2>
-    {{ category }}
+    {{ category|capfirst }}
 </h2>
 <h4>
     {% if request.user == user and category == 'articles' %}
@@ -80,6 +80,6 @@
     </span>
 </div>
 {% else %}
-<strong>No {{ category }}</strong>
+<strong>No {{ category|capfirst }}</strong>
 {% endif %}
 {% endblock %}

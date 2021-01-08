@@ -122,7 +122,7 @@ class Network(generic.ListView):
     context_object_name = "users"
 
     def dispatch(self, request, *args, **kwargs):
-        if kwargs["filter"] != "all" and request.user.is_anonymous:
+        if kwargs["filter"] != "users" and request.user.is_anonymous:
             return redirect_to_login(
                 request.get_full_path(),
             )

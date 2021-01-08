@@ -15,8 +15,9 @@
     <a href="{% url 'search:home' 'polls' %}?q={{request.GET.q}}">Polls</a>
     <a href="{% url 'search:home' 'users' %}?q={{request.GET.q}}">Users</a>
     <h2 id="results_category">
-        {{ category }}
+        {{ category|capfirst }}
     </h2>
+    {% if results %}
     {% if category == 'feeds' %}
     {% include 'feeds/_feed_list.html' with feeds=results %}
     {% elif category == 'articles' %}
@@ -48,6 +49,9 @@
             {% endif %}
         </span>
     </div>
+    {% else %}
+    <strong>No {{ category|capfirst }}</strong>
+    {% endif %}
 </div>
 {% else %}
 Enter a search term.

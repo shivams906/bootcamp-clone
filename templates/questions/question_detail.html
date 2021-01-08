@@ -11,6 +11,8 @@
 <a href="{% url 'questions:answer' question.pk %}">Answer it</a>
 {% if question.answers %}
 {% include 'questions/_answer_list.html' with answers=question.answers.all %}
+{% else %}
+<p><strong>No Answers</strong></p>
 {% endif %}
 {% endif %}
 {% endblock %}
