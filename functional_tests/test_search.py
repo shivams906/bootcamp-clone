@@ -39,7 +39,7 @@ class SearchTestCase(FunctionalTest):
 
         # The results are for feeds.
         results_category = results.find_element_by_id("results_category")
-        self.assertIn("feeds", results_category.text)
+        self.assertIn("Feeds", results_category.text)
 
         # She sees a link to go to articles' search results and clicks on it.
         results.find_element_by_link_text("Articles").click()
@@ -54,7 +54,7 @@ class SearchTestCase(FunctionalTest):
         )
         results = wait_for(lambda: self.browser.find_element_by_id("results"))
         results_category = results.find_element_by_id("results_category")
-        self.assertIn("articles", results_category.text)
+        self.assertIn("Articles", results_category.text)
 
         # She sees her article in the list and clicks on it.
         result_list = results.find_element_by_id("article_list")

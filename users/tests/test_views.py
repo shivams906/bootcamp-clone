@@ -333,14 +333,14 @@ class NetworkTestCase(TestCase):
     Test class for Network view.
     """
 
-    def test_returns_all_users_if_filter_is_all(self):
+    def test_returns_all_users_if_filter_is_users(self):
         """
-        Tests that returns all users if filter is all.
+        Tests that returns all users if filter is users.
         """
         user1 = UserFactory()
         user2 = UserFactory()
         request = RequestFactory().get("")
-        response = Network.as_view()(request, filter="all")
+        response = Network.as_view()(request, filter="users")
         self.assertIn("users", response.context_data)
         users = response.context_data["users"]
         self.assertIn(user1, users)
@@ -419,5 +419,6 @@ class NetworkTestCase(TestCase):
         Tests that view returns filter in context data.
         """
         request = RequestFactory().get("")
-        response = Network.as_view()(request, filter="all")
+        response = Network.as_view()(request, filter="users")
         self.assertIn("filter", response.context_data)
+        self.assertEqual(response.context_data["filter"], "users")
