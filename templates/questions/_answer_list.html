@@ -3,7 +3,7 @@
 <ul id="answer_list">
     {% for answer in answers %}
     <li id="{{ answer.pk }}" class="answer_item">
-        <a href="{{ answer.author.get_absolute_url }}">{{ answer.author }}</a>
+        <a href="{{ answer.author.get_absolute_url }}"><strong>{{ answer.author }}</strong></a>
         wrote {{ answer.created_at|naturaltime }}:
         <p>
             <a href="{% url 'questions:detail' answer.question.pk %}#{{ answer.pk }}">{{ answer.text|linebreaksbr }}</a>

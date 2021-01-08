@@ -8,12 +8,12 @@
 </form>
 {% if 'q' in request.GET and request.GET.q != '' %}
 <div id="results">
-    <a href="{% url 'search:home' 'feeds' %}?q={{request.GET.q}}">Feeds</a>
-    <a href="{% url 'search:home' 'articles' %}?q={{request.GET.q}}">Articles</a>
-    <a href="{% url 'search:home' 'questions' %}?q={{request.GET.q}}">Questions</a>
-    <a href="{% url 'search:home' 'answers' %}?q={{request.GET.q}}">Answers</a>
-    <a href="{% url 'search:home' 'polls' %}?q={{request.GET.q}}">Polls</a>
-    <a href="{% url 'search:home' 'users' %}?q={{request.GET.q}}">Users</a>
+    <a href="{% url 'search:home' 'feeds' %}?q={{request.GET.q}}"><strong>Feeds</strong></a>
+    <a href="{% url 'search:home' 'articles' %}?q={{request.GET.q}}"><strong>Articles</strong></a>
+    <a href="{% url 'search:home' 'questions' %}?q={{request.GET.q}}"><strong>Questions</strong></a>
+    <a href="{% url 'search:home' 'answers' %}?q={{request.GET.q}}"><strong>Answers</strong></a>
+    <a href="{% url 'search:home' 'polls' %}?q={{request.GET.q}}"><strong>Polls</strong></a>
+    <a href="{% url 'search:home' 'users' %}?q={{request.GET.q}}"><strong>Users</strong></a>
     <h2 id="results_category">
         {{ category|capfirst }}
     </h2>

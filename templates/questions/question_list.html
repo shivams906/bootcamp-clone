@@ -5,7 +5,7 @@
 {% if user.is_authenticated %}
 <a href="{% url 'questions:create' %}">Ask a question</a>
 {% else %}
-<a href="{% url 'users:login' %}?next={{ request.get_full_path}}">Login</a> to ask a question
+<a href="{% url 'users:login' %}?next={{ request.get_full_path}}"><strong>Login</strong></a> to ask a question
 {% endif %}
 {% if questions %}
 {% include 'questions/_question_list.html' with questions=questions %}

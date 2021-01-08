@@ -4,11 +4,11 @@
 {% block main %}
 {% if question %}
 <h4>{{ question.title }}</h4>
-<strong>Author</strong> - <a href="{{ question.author.get_absolute_url }}">{{ question.author }}</a>
+Author - <a href="{{ question.author.get_absolute_url }}"><strong>{{ question.author }}</strong></a>
 <br>
-<strong>Created</strong> - {{ question.created_at|naturaltime }}
+Created - {{ question.created_at|naturaltime }}
 <p>{{ question.description|linebreaksbr }}</p>
-<a href="{% url 'questions:answer' question.pk %}">Answer it</a>
+<a href="{% url 'questions:answer' question.pk %}"><strong>Answer it</strong></a>
 {% if question.answers %}
 {% include 'questions/_answer_list.html' with answers=question.answers.all %}
 {% else %}

@@ -8,7 +8,7 @@
 <a href="{% url 'articles:edit' article.pk %}">Edit</a>
 {% endif %}
 <br>
-Author - <a href="{{ article.author.get_absolute_url }}">{{ article.author }}</a>
+Author - <a href="{{ article.author.get_absolute_url }}"><strong>{{ article.author }}</strong></a>
 <br>
 {% if article.published %}
 Published at: {{ article.published_at|naturaltime }}

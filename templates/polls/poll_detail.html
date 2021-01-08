@@ -5,7 +5,8 @@
 {% if question %}
 <h2>Question:</h2>
 <h3>{{ question }}</h3>
-by <a href="{{ question.author.get_absolute_url }}">{{ question.author }}</a> {{ question.created_at|naturaltime }}
+by <a href="{{ question.author.get_absolute_url }}"><strong>{{ question.author }}</strong></a>
+{{ question.created_at|naturaltime }}
 {% if error_message %}
 <p class="error"><strong>{{ error_message }}</strong></p>
 {% endif %} {% if question.choices %}
