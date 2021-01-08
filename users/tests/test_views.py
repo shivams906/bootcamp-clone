@@ -261,6 +261,17 @@ class FollowTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn(reverse("users:login"), response.url)
 
+    def test_user_can_not_follow_itself(self):
+        """
+        Tests that user can not follow itself.
+        """
+        user = UserFactory()
+        request = RequestFactory().get("")
+        request.user = user
+        response = Follow.as_view()(request, pk=user.pk)
+        self.assertNotIn(user, user.followers.all())
+        self.assertNotIn(user, user.followees.all())
+
 
 class UnfollowTestCase(TestCase):
     """
@@ -303,6 +314,18 @@ class UnfollowTestCase(TestCase):
         response = Follow.as_view()(request, pk=user.pk)
         self.assertEqual(response.status_code, 302)
         self.assertIn(reverse("users:login"), response.url)
+
+    def test_user_can_not_unfollow_itself(self):
+        """
+        Tests that user can not unfollow itself.
+        """
+        user = UserFactory()
+        user.follow(user)
+        request = RequestFactory().get("")
+        request.user = user
+        response = Unfollow.as_view()(request, pk=user.pk)
+        self.assertIn(user, user.followers.all())
+        self.assertIn(user, user.followees.all())
 
 
 class NetworkTestCase(TestCase):

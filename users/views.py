@@ -94,7 +94,8 @@ class Follow(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         user = get_object_or_404(User, pk=kwargs["pk"])
-        user.follow(request.user)
+        if user != request.user:
+            user.follow(request.user)
         return redirect(user)
 
 
@@ -105,7 +106,8 @@ class Unfollow(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         user = get_object_or_404(User, pk=kwargs["pk"])
-        user.unfollow(request.user)
+        if user != request.user:
+            user.unfollow(request.user)
         return redirect(user)
 
 
