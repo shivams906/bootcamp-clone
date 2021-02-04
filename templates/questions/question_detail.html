@@ -4,6 +4,10 @@
 {% block main %}
 {% if question %}
 <h4>{{ question.title }}</h4>
+{% if request.user == question.author %}
+<a href="{% url 'questions:edit' question.pk %}">Edit</a>
+{% endif %}
+<br>
 Author - <a href="{{ question.author.get_absolute_url }}"><strong>{{ question.author }}</strong></a>
 <br>
 Created - {{ question.created_at|naturaltime }}

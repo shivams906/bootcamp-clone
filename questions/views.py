@@ -32,6 +32,20 @@ class QuestionCreate(LoginRequiredMixin, generic.CreateView):
         return redirect(question)
 
 
+class QuestionEdit(LoginRequiredMixin, generic.UpdateView):
+    """
+    View class for editing questions.
+    """
+
+    queryset = Question.objects.all()
+    form_class = QuestionModelForm
+    template_name = "questions/question_create.html"
+
+    def form_valid(self, form):
+        question = form.save(author=self.request.user)
+        return redirect(question)
+
+
 class QuestionDetail(generic.DetailView):
     """
     View class for viewing a single question.

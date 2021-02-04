@@ -7,7 +7,13 @@ from django.urls import reverse
 from questions.factories import AnswerFactory, QuestionFactory
 from questions.forms import AnswerModelForm, QuestionModelForm
 from questions.models import Answer, Question
-from questions.views import AnswerCreate, QuestionCreate, QuestionDetail, QuestionList
+from questions.views import (
+    AnswerCreate,
+    QuestionCreate,
+    QuestionEdit,
+    QuestionDetail,
+    QuestionList,
+)
 from users.factories import UserFactory
 
 
@@ -81,6 +87,64 @@ class QuestionCreateTestCase(TestCase):
         request = RequestFactory().get("")
         request.user = AnonymousUser()
         response = QuestionCreate.as_view()(request)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(reverse("users:login"), response.url)
+
+
+class QuestionEditTestCase(TestCase):
+    """
+    Test class for QuestionEdit.
+    """
+
+    def test_GET_returns_form_with_question_details_filled_in(self):
+        """
+        Tests that GET returns a form pre-filled with the question's detail.
+        """
+        question = QuestionFactory()
+        request = RequestFactory().get("")
+        request.user = question.author
+        response = QuestionEdit.as_view()(request, pk=question.pk)
+        self.assertIn("form", response.context_data)
+        form = response.context_data["form"]
+        self.assertEqual(form.instance, question)
+
+    def test_valid_POST_updates_the_question(self):
+        """
+        Tests that POSTing valid data updates the question.
+        """
+        question = QuestionFactory()
+        request = RequestFactory().post(
+            "", {"title": "new title", "description": "new description"}
+        )
+        request.user = question.author
+        QuestionEdit.as_view()(request, pk=question.pk)
+        self.assertEqual(Question.objects.count(), 1)
+        question.refresh_from_db()
+        self.assertEqual(question.title, "new title")
+        self.assertEqual(question.description, "new description")
+
+    def test_valid_POST_redirects_to_the_question_detail_page(self):
+        """
+        Tests that POSTing valid data redirects user
+        to the question's detail page.
+        """
+        question = QuestionFactory()
+        request = RequestFactory().post(
+            "", {"title": "new title", "description": "new description"}
+        )
+        request.user = question.author
+        response = QuestionEdit.as_view()(request, pk=question.pk)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, question.get_absolute_url())
+
+    def test_unauthenticated_users_are_redirected_to_login_page(self):
+        """
+        Tests that unauthenticated users are redirected to login page.
+        """
+        question = QuestionFactory()
+        request = RequestFactory().get("")
+        request.user = AnonymousUser()
+        response = QuestionEdit.as_view()(request, pk=question.pk)
         self.assertEqual(response.status_code, 302)
         self.assertIn(reverse("users:login"), response.url)
 

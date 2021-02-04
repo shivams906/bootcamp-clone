@@ -15,14 +15,10 @@ class QuestionModelForm(forms.ModelForm):
         fields = ("title", "description")
 
     def save(self, author=None, commit=True):
-        question = Question(
-            title=self.cleaned_data["title"],
-            description=self.cleaned_data["description"],
-            author=author,
-        )
+        self.instance.author = author
         if commit:
-            question.save()
-        return question
+            self.instance.save()
+        return self.instance
 
 
 class AnswerModelForm(forms.ModelForm):
