@@ -41,10 +41,6 @@ class QuestionEdit(LoginRequiredMixin, generic.UpdateView):
     form_class = QuestionModelForm
     template_name = "questions/question_create.html"
 
-    def form_valid(self, form):
-        question = form.save(author=self.request.user)
-        return redirect(question)
-
 
 class QuestionDetail(generic.DetailView):
     """

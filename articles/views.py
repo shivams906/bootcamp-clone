@@ -52,7 +52,7 @@ class ArticleEdit(UpdateView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        article = form.save(instance=self.get_object())
+        article = form.save()
         if "publish" in self.request.POST:
             article.publish()
         return redirect(article)

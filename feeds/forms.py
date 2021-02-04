@@ -20,7 +20,8 @@ class FeedModelForm(forms.ModelForm):
         }
 
     def save(self, author=None, commit=True):
-        feed = Feed(text=self.cleaned_data["text"], author=author)
+        if author:
+            self.instance.author = author
         if commit:
-            feed.save()
-        return feed
+            self.instance.save()
+        return self.instance

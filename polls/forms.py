@@ -15,9 +15,8 @@ class QuestionModelForm(forms.ModelForm):
         fields = ("question_text",)
 
     def save(self, author=None, commit=True):
-        question = Question(
-            question_text=self.cleaned_data["question_text"], author=author
-        )
+        if author:
+            self.instance.author = author
         if commit:
-            question.save()
-        return question
+            self.instance.save()
+        return self.instance
