@@ -190,7 +190,7 @@ class ArticleTest(FunctionalTest):
 
     def test_can_update_published_articles(self):
         """
-        Tests that user can update publish articles.
+        Tests that user can update published articles.
         """
         # Edith logs in and goes to her article's page.
         self.login("Edith")
