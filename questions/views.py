@@ -63,3 +63,13 @@ class AnswerCreate(LoginRequiredMixin, generic.CreateView):
         question = get_object_or_404(Question, pk=self.kwargs["pk"])
         form.save(question=question, author=self.request.user)
         return redirect(question)
+
+
+class AnswerEdit(LoginRequiredMixin, generic.UpdateView):
+    """
+    View class for editing answers.
+    """
+
+    queryset = Answer.objects.all()
+    form_class = AnswerModelForm
+    template_name = "questions/answer_create.html"

@@ -52,3 +52,9 @@ class Answer(TimeStampedModel):
 
     def __str__(self):
         return self.text[:100]
+
+    def get_absolute_url(self):
+        """
+        Returns absolute url of answer.
+        """
+        return reverse("questions:detail", args=[self.question.pk])

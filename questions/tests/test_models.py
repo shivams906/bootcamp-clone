@@ -97,3 +97,10 @@ class AnswerModelTestCase(TestCase):
         answers = Answer.objects.all()
         self.assertEqual(answer1, answers[1])
         self.assertEqual(answer2, answers[0])
+
+    def test_get_absolute_url(self):
+        """
+        Tests that get_absolute_url returns correct url.
+        """
+        answer = AnswerFactory()
+        self.assertEqual(answer.get_absolute_url(), answer.question.get_absolute_url())

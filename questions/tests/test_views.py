@@ -9,6 +9,7 @@ from questions.forms import AnswerModelForm, QuestionModelForm
 from questions.models import Answer, Question
 from questions.views import (
     AnswerCreate,
+    AnswerEdit,
     QuestionCreate,
     QuestionEdit,
     QuestionDetail,
@@ -216,5 +217,64 @@ class AnswerCreateTestCase(TestCase):
         request = RequestFactory().get("")
         request.user = AnonymousUser()
         response = AnswerCreate.as_view()(request, pk=question.pk)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(reverse("users:login"), response.url)
+
+
+class AnswerEditTestCase(TestCase):
+    """
+    Test class for AnswerEdit.
+    """
+
+    def test_GET_returns_form_with_answer_details_filled_in(self):
+        """
+        Tests that GET returns a form pre-filled with the answer's detail.
+        """
+        answer = AnswerFactory()
+        request = RequestFactory().get("")
+        request.user = answer.author
+        response = AnswerEdit.as_view()(
+            request, question_pk=answer.question.pk, pk=answer.pk
+        )
+        self.assertIn("form", response.context_data)
+        form = response.context_data["form"]
+        self.assertEqual(form.instance, answer)
+
+    def test_valid_POST_updates_the_answer(self):
+        """
+        Tests that POSTing valid data updates the answer.
+        """
+        answer = AnswerFactory()
+        request = RequestFactory().post("", {"text": "new answer"})
+        request.user = answer.author
+        AnswerEdit.as_view()(request, question_pk=answer.question.pk, pk=answer.pk)
+        self.assertEqual(Answer.objects.count(), 1)
+        answer.refresh_from_db()
+        self.assertEqual(answer.text, "new answer")
+
+    def test_valid_POST_redirects_to_the_answer_detail_page(self):
+        """
+        Tests that POSTing valid data redirects user
+        to the answer's detail page.
+        """
+        answer = AnswerFactory()
+        request = RequestFactory().post("", {"text": "new answer"})
+        request.user = answer.author
+        response = AnswerEdit.as_view()(
+            request, question_pk=answer.question.pk, pk=answer.pk
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, answer.get_absolute_url())
+
+    def test_unauthenticated_users_are_redirected_to_login_page(self):
+        """
+        Tests that unauthenticated users are redirected to login page.
+        """
+        answer = AnswerFactory()
+        request = RequestFactory().get("")
+        request.user = AnonymousUser()
+        response = AnswerEdit.as_view()(
+            request, question_pk=answer.question.pk, pk=answer.pk
+        )
         self.assertEqual(response.status_code, 302)
         self.assertIn(reverse("users:login"), response.url)

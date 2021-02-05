@@ -3,7 +3,7 @@ Functional tests for questions.
 """
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from questions.factories import QuestionFactory
+from questions.factories import AnswerFactory, QuestionFactory
 from questions.models import Question
 from .base import FunctionalTest, wait_for
 
@@ -152,3 +152,37 @@ class QuestionTest(FunctionalTest):
         ).text
         self.assertIn("new title", main_content)
         self.assertIn("new description", main_content)
+
+    def test_can_edit_answers(self):
+        """
+        Tests that user can edit answers.
+        """
+        # Edith logs in and goes to her answer.
+        self.login("Edith")
+        edith = User.objects.get(name="Edith")
+        answer = AnswerFactory(author=edith)
+        self.browser.get(self.live_server_url + answer.get_absolute_url())
+
+        # She clicks on edit.
+        answer_item = self.browser.find_elements_by_class_name("answer_item")[0]
+        answer_item.find_element_by_link_text("Edit").click()
+
+        # She changes her answer and submits it.
+        wait_for(lambda: self.browser.find_element_by_name("answer_form"))
+        answer_box = wait_for(lambda: self.browser.find_element_by_name("text"))
+        submit_button = wait_for(lambda: self.browser.find_element_by_name("submit"))
+
+        answer_box.send_keys("new answer")
+        submit_button.click()
+
+        # Her answer is changed.
+        wait_for(
+            lambda: self.assertEqual(
+                self.browser.current_url,
+                self.live_server_url + answer.get_absolute_url(),
+            )
+        )
+        main_content = wait_for(
+            lambda: self.browser.find_element_by_tag_name("main")
+        ).text
+        self.assertIn("new answer", main_content)
