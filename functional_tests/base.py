@@ -5,9 +5,12 @@ import time
 from faker import Faker
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.firefox.options import Options
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from users.factories import UserFactory
 
+options = Options()
+options.headless = True
 fake = Faker()
 MAX_WAIT = 5
 
@@ -18,7 +21,7 @@ class FunctionalTest(StaticLiveServerTestCase):
     """
 
     def setUp(self):
-        self.browser = webdriver.Firefox()
+        self.browser = webdriver.Firefox(options=options)
 
     def tearDown(self):
         self.browser.quit()

@@ -140,8 +140,8 @@ class ArticleTest(FunctionalTest):
         wait_for(lambda: self.browser.find_element_by_link_text("Edit")).click()
 
         # She is taken to a form for editing the draft.
-        title_box = wait_for(lambda: self.browser.find_element_by_name("title"))
-        text_box = wait_for(lambda: self.browser.find_element_by_name("text"))
+        wait_for(lambda: self.browser.find_element_by_name("title"))
+        wait_for(lambda: self.browser.find_element_by_name("text"))
         submit_button = wait_for(
             lambda: self.browser.find_element_by_css_selector("input[name='publish']")
         )

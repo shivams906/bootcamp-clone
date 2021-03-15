@@ -6,7 +6,7 @@ from articles.factories import ArticleFactory
 from feeds.factories import FeedFactory
 from users.factories import UserFactory
 from users.models import User
-from .base import fake, FunctionalTest, wait_for, webdriver
+from .base import fake, FunctionalTest, options, wait_for, webdriver
 
 
 class UserTest(FunctionalTest):
@@ -106,7 +106,7 @@ class UserTest(FunctionalTest):
         """
         self.login("Meredith")
         meredith_browser = self.browser
-        self.browser = webdriver.Firefox()
+        self.browser = webdriver.Firefox(options=options)
 
         # Edith logs in and goes to Meredith's profile page.
         self.login("Edith")
